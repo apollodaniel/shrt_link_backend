@@ -1,0 +1,33 @@
+#+title: Readme
+#+author: Apollo Daniel
+
+* Table of Contents :toc:
+- [[#shrt-link-backend][*shrt link* Backend]]
+- [[#file-structure][File Structure]]
+  - [[#src][src/]]
+
+* *shrt link* Backend
+shrt link backend based on express, and postgresql.
+
+* File Structure
+** src/
+*** index.ts
+*** data-source.ts
+*** modules/
+**** users/
+- users.entity.ts
+- users.repository.ts
+- users.controller.ts
+- users.routes.ts
+**** urls/
+- urls.entity.ts
+- urls.repository.ts
+- urls.controller.ts
+- urls.routes.ts
+**** auth/
+- auth.entity.ts
+- auth.repository.ts
+- auth.controller.ts
+- auth.routes.ts
+**** common/
+- common.types.ts

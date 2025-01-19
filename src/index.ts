@@ -1,20 +1,25 @@
-import { AppDataSource } from "./data-source"
-import { User } from "./entity/User"
+import { AppDataSource } from './data-source';
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import mainRouter from './modules/main';
 
-AppDataSource.initialize().then(async () => {
+dotenv.config();
 
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+const APP_PORT = process.env.EXPRESS_PORT || 7125;
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+const app = express();
+app.use(cors({ origin: '*' }));
+app.use(cookieParser(process.env.COOKIE_ENCRIPTION_KEY));
+app.use(express.json());
+app.use('/api/v1/', mainRouter);
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
-
-}).catch(error => console.log(error))
+AppDataSource.initialize()
+	.then(async () => {
+		console.log('Initialized AppDataSource');
+		app.listen(APP_PORT, () => {
+			console.log(`Listening on port ${APP_PORT}`);
+		});
+	})
+	.catch((error) => console.log(error));
