@@ -11,7 +11,7 @@ import { User } from '../users/users.entity';
 
 @Entity()
 export class Url {
-	@PrimaryColumn()
+	@PrimaryColumn({ default: generateUrlId(7) })
 	id: string;
 
 	@Column()
@@ -21,16 +21,6 @@ export class Url {
 	@ManyToOne((type) => User, (user: User) => user.id, { onDelete: 'CASCADE' })
 	userId: string;
 
-	@Column('bigint')
-	creationDate: number;
-
-	@BeforeInsert()
-	generateUrlId() {
-		this.id = generateUrlId(7);
-	}
-
-	@BeforeInsert()
-	generateCreationDate() {
-		this.creationDate = Date.now();
-	}
+	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	creationDate: Date;
 }

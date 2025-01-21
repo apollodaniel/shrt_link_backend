@@ -54,7 +54,7 @@ describe('AuthController', () => {
 		await AuthController.registerUser(req, res);
 
 		// check if it's working and not returning any error
-		expect(res.status).toHaveBeenCalledWith(200);
+		expect(res.sendStatus).toHaveBeenCalledWith(200);
 		expect(res.send).toHaveBeenCalledTimes(0);
 		expect(res.cookie).toHaveBeenCalledTimes(2);
 
@@ -78,34 +78,39 @@ describe('AuthController', () => {
 			firstName: 'Apollo',
 			lastName: 'Daniel',
 		};
-		let req = getMockReq({ body: user });
-		const { res } = getMockRes();
+		const tokens = await AuthServices.registerUser(user);
+		expect(tokens).toBeDefined();
+		expect(tokens).toHaveProperty('refreshToken');
+		expect(tokens).toHaveProperty('authToken');
 
-		await AuthController.registerUser(req, res);
-		await AuthController.logoutUser(req, res);
-
-		req = getMockReq({
+		let logoutReq = getMockReq({ cookies: tokens });
+		let loginReq = getMockReq({
 			body: {
 				email: 'apollodaniel@gmail.com',
 				password: 'apollodaniel123',
 			},
 		});
 
-		await AuthController.loginUser(req, res);
+		const { res: loginRes } = getMockRes();
+		const { res: logoutRes } = getMockRes();
 
-		// check if it's working and not returning any error
-		expect(res.status).toHaveBeenCalledWith(200);
-		expect(res.send).toHaveBeenCalledTimes(0);
-		expect(res.clearCookie).toHaveBeenCalledTimes(2);
-		expect(res.cookie).toHaveBeenCalledTimes(2);
+		await AuthController.logoutUser(logoutReq, logoutRes);
+		expect(logoutRes.sendStatus).toHaveBeenCalledWith(200);
+		expect(logoutRes.clearCookie).toHaveBeenCalledTimes(2);
+		expect(logoutRes.send).toHaveBeenCalledTimes(0);
+
+		await AuthController.loginUser(loginReq, loginRes);
+		expect(loginRes.sendStatus).toHaveBeenCalledWith(200);
+		expect(loginRes.cookie).toHaveBeenCalledTimes(2);
+		expect(loginRes.send).toHaveBeenCalledTimes(0);
 
 		// check if cookies are being sent correctly
-		expect(res.cookie).toHaveBeenCalledWith(
+		expect(loginRes.cookie).toHaveBeenCalledWith(
 			COOKIE_CONFIG['refreshToken'].name,
 			expect.anything(),
 			expect.objectContaining(COOKIE_CONFIG['refreshToken'].config),
 		);
-		expect(res.cookie).toHaveBeenCalledWith(
+		expect(loginRes.cookie).toHaveBeenCalledWith(
 			COOKIE_CONFIG['authToken'].name,
 			expect.anything(),
 			expect.objectContaining(COOKIE_CONFIG['authToken'].config),

@@ -1,11 +1,18 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	ManyToOne,
+	OneToOne,
+	PrimaryColumn,
+} from 'typeorm';
 import { User } from '../users/users.entity';
 
 @Entity()
 export class Auth {
 	@PrimaryColumn({ unique: true })
 	token: string;
-	@Column({ unique: true })
-	@OneToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
+	@ManyToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
+	@JoinColumn({ name: 'userId' })
 	userId: string;
 }
