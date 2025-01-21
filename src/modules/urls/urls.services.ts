@@ -7,6 +7,9 @@ export class UrlServices {
 		await this.checkUrlExists(urlId);
 		return await UrlRepository.getUrl(urlId);
 	}
+	static async getUrls(userId: string): Promise<Url[]> {
+		return await UrlRepository.getUrls(userId);
+	}
 	static async addUrl(url: Partial<Url>) {
 		return await UrlRepository.addUrl(url);
 	}

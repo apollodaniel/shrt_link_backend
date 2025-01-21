@@ -18,6 +18,18 @@ export class UrlController {
 			sendErrorResponse(resp, err, this.ERROR_KIND);
 		}
 	}
+
+	static async getUrls(req: Request, resp: Response) {
+		const userId = req.userId;
+
+		try {
+			const urls = await UrlServices.getUrls(userId);
+			resp.status(200).json(urls);
+			return;
+		} catch (err: any) {
+			sendErrorResponse(resp, err, this.ERROR_KIND);
+		}
+	}
 	static async addUrl(req: Request, resp: Response) {
 		const url: Partial<Url> = req.body;
 

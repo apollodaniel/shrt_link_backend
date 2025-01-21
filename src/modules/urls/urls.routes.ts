@@ -22,11 +22,16 @@ router.delete(
 	ValidationController.validateWithAuth,
 	UrlController.deleteUrl,
 );
-router.get(
+router.post(
 	'/urls/',
 	checkSchema(URL_POST_VALIDATION),
 	ValidationController.validateWithAuth,
 	UrlController.addUrl,
+);
+router.get(
+	'/urls/',
+	ValidationController.validateWithAuth,
+	UrlController.getUrls,
 );
 
 export default router;
