@@ -1,16 +1,18 @@
 {
-   "compilerOptions": {
-      "lib": [
-         "es5",
-         "es6"
-      ],
-      "target": "es5",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "outDir": "./build",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": true,
-	   "esModuleInterop": true
-   }
+	"compilerOptions": {
+		"lib": ["es5", "es6"],
+		"target": "es5",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"outDir": "./build",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"typeRoots": [
+			"./types",
+			"./node_modules/@types/"
+		] /* Specify multiple folders that act like './node_modules/@types'. */
+	}
+	// "include": ["src/**/*", "types/**/*.d.ts"]
 }

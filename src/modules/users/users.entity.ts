@@ -26,14 +26,9 @@ export class User {
 	})
 	password: string;
 
-	@Column('bigint')
-	creationDate: number;
+	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	creationDate: Date;
 
 	@OneToMany((type) => Url, (url) => url)
 	urls: Url[];
-
-	@BeforeInsert()
-	generateCreationDate() {
-		this.creationDate = Date.now();
-	}
 }

@@ -4,6 +4,7 @@ import { User } from '../users/users.entity';
 import { sendErrorResponse } from '../common/common.utils';
 import { COOKIE_CONFIG } from './auth.cookies';
 import { AuthCredentials } from './auth.types';
+import { log } from 'console';
 
 export class AuthController {
 	private static ERROR_KIND = 'Auth';
@@ -25,7 +26,7 @@ export class AuthController {
 				tokens.authToken,
 				COOKIE_CONFIG['authToken'].config,
 			);
-			resp.status(200).json({});
+			resp.status(200);
 			return;
 		} catch (err: any) {
 			sendErrorResponse(resp, err, this.ERROR_KIND);
@@ -52,7 +53,7 @@ export class AuthController {
 				COOKIE_CONFIG['authToken'].config,
 			);
 
-			resp.status(200).json({});
+			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
 			sendErrorResponse(resp, err, this.ERROR_KIND);

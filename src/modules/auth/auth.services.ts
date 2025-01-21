@@ -26,11 +26,13 @@ export class AuthServices {
 	}> {
 		try {
 			await AuthRepository.registerUser(user);
-			return await AuthRepository.loginUser({
+			const tokens = await AuthRepository.loginUser({
 				email: user.email!,
 				password: user.password!,
 			});
+			return tokens;
 		} catch (err) {
+			console.log(err.message);
 			if (isErrorEntry(err)) {
 				throw err;
 			}
