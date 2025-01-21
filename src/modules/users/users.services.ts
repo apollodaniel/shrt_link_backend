@@ -13,7 +13,7 @@ export class UserServices {
 	}
 	static async getUser(user: string | User) {
 		const userId = typeof user == 'string' ? user : user.id;
-		UserRepository.getUser(userId);
+		return await UserRepository.getUser(userId);
 	}
 	static async deleteUser(user: string | User) {
 		const userId = typeof user == 'string' ? user : user.id;

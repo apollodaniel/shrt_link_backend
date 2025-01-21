@@ -32,7 +32,6 @@ export class AuthServices {
 			});
 			return tokens;
 		} catch (err) {
-			console.log(err.message);
 			if (isErrorEntry(err)) {
 				throw err;
 			}
@@ -54,8 +53,8 @@ export class AuthServices {
 
 	static async logoutUser(token: string) {
 		try {
-			const deleted = await AuthRepository.logoutUser(token);
-			if (!deleted) {
+			const exists = await AuthRepository.logoutUser(token);
+			if (exists) {
 				throw COMMON_ERRORS['UNKNOWN_ERROR'];
 			}
 		} catch (err) {

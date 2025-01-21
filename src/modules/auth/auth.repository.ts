@@ -87,7 +87,7 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		});
 	},
 	async logoutUser(this: Repository<Auth>, token: string) {
-		await this.createQueryBuilder().where({ token }).delete().execute();
+		await this.delete({ token });
 
 		return await this.exists({ where: { token } });
 	},

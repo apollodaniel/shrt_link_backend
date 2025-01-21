@@ -25,6 +25,6 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
 		if (!exists) {
 			throw USER_ERRORS['USER_NOT_FOUND'];
 		}
-		await this.createQueryBuilder().whereInIds(id).delete().execute();
+		await this.delete({ id });
 	},
 });
