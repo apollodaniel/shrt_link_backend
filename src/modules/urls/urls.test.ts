@@ -12,6 +12,7 @@ import { UrlController } from './urls.controller';
 import { Url } from './urls.entity';
 import { create } from 'domain';
 import { UrlServices } from './urls.services';
+import { ConnectionNotFoundError } from 'typeorm';
 
 // jest.mock('./auth.services'); // Mocka AuthServices
 
@@ -112,5 +113,22 @@ describe('AuthController', () => {
 
 		expect(res.status).toHaveBeenCalledWith(200);
 		expect(res.json).toHaveBeenCalledWith([createdUrl, otherCreatedUrl]);
+	});
+
+	test('Deleta uma url', async () => {
+		const urlId = createdUrl.id;
+
+		const req = getMockReq({ userId: user.id, params: { id: urlId } });
+		const { res } = getMockRes();
+
+		await UrlController.deleteUrl(req, res);
+
+		expect(res.sendStatus).toHaveBeenCalledWith(200);
+		expect(res.send).toHaveReturnedTimes(0);
+		expect(res.status).toHaveReturnedTimes(0);
+
+		const urls = await UrlRepository.createQueryBuilder().getMany();
+		expect(urls).toHaveLength(1);
+		expect(urls[0].id).not.toBe(urlId);
 	});
 });
