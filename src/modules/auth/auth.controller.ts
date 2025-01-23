@@ -25,7 +25,7 @@ export class AuthController {
 				tokens.authToken,
 				COOKIE_CONFIG['authToken'].config,
 			);
-			resp.status(200).json({});
+			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
 			sendErrorResponse(resp, err, this.ERROR_KIND);
@@ -52,7 +52,7 @@ export class AuthController {
 				COOKIE_CONFIG['authToken'].config,
 			);
 
-			resp.status(200).json({});
+			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
 			sendErrorResponse(resp, err, this.ERROR_KIND);

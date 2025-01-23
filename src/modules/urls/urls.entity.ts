@@ -5,6 +5,7 @@ import {
 	PrimaryColumn,
 	BeforeInsert,
 	ManyToOne,
+	JoinColumn,
 } from 'typeorm';
 import { generateUrlId } from './urls.utils';
 import { User } from '../users/users.entity';
@@ -17,20 +18,16 @@ export class Url {
 	@Column()
 	originalUrl: string;
 
-	@Column()
-	@ManyToOne((type) => User, (user: User) => user.id, { onDelete: 'CASCADE' })
-	userId: string;
+	@ManyToOne(() => User, (user: User) => user.urls, {
+		onDelete: 'CASCADE',
+	})
+	user: User;
 
-	@Column('bigint')
-	creationDate: number;
+	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	creationDate: Date;
 
 	@BeforeInsert()
-	generateUrlId() {
+	private beforeInsert() {
 		this.id = generateUrlId(7);
-	}
-
-	@BeforeInsert()
-	generateCreationDate() {
-		this.creationDate = Date.now();
 	}
 }

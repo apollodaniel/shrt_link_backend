@@ -16,7 +16,7 @@ export const COOKIE_CONFIG: Record<
 	authToken: {
 		name: 'authToken',
 		config: {
-			maxAge: 30 * 60 * 1000, // 30 days
+			maxAge: 30 * 60 * 1000, // 30 minutes
 			httpOnly: true,
 			secure: true,
 			sameSite: 'strict',

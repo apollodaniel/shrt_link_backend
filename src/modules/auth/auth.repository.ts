@@ -8,14 +8,14 @@ import { JwtHelper } from '../common/common.jwt';
 import { User } from '../users/users.entity';
 import { compare, hash } from 'bcrypt';
 import { SALT_ROUNDS } from '../common/common.constants';
-import { IRouterHandler } from 'express';
 
 export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 	async loginUser(
 		this: Repository<Auth>,
 		user: AuthCredentials,
 	): Promise<{ refreshToken: string; authToken: string }> {
-		const result = await UserRepository.createQueryBuilder()
+		const result = await UserRepository.createQueryBuilder('user')
+			.addSelect('user.password') // This includes the password in the result
 			.where({
 				email: user.email,
 			})
@@ -27,14 +27,9 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		}
 
 		// email exists
+		let isPasswordMatch;
 		try {
-			if (await compare(user.password, result.password)) {
-				// credentials correct
-				const refreshToken = JwtHelper.generateRefreshToken(user.email);
-				const authToken = JwtHelper.generateAuthToken(refreshToken);
-
-				return { refreshToken, authToken };
-			}
+			isPasswordMatch = await compare(user.password, result.password);
 		} catch (e) {
 			// ignore catch statement to match all two cases of being an error either a false
 			console.log(
@@ -42,13 +37,20 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 					e.message,
 			);
 		}
+		if (isPasswordMatch) {
+			// credentials correct
+			const refreshToken = JwtHelper.generateRefreshToken(user.email);
+			const authToken = JwtHelper.generateAuthToken(refreshToken);
+
+			const auth = this.create({ user: result, token: refreshToken });
+			await this.save(auth);
+
+			return { refreshToken, authToken };
+		}
 
 		throw AuthErrors['INCORRECT_PASSWORD'];
 	},
-	async registerUser(
-		this: Repository<Auth>,
-		user: Partial<User>,
-	): IRouterHandler {
+	async registerUser(this: Repository<Auth>, user: Partial<User>) {
 		const emailExists = await UserRepository.exists({
 			where: {
 				email: user.email,
@@ -58,19 +60,20 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		if (emailExists) {
 			throw AuthErrors['EMAIL_ALREADY_EXISTS'];
 		}
-
+		let userPassword;
 		try {
-			const userPassword = await hash(user.password, SALT_ROUNDS);
-			const parsedUser = {
-				...user,
-				password: userPassword,
-			};
-
-			await UserRepository.save(parsedUser);
+			userPassword = await hash(user.password, SALT_ROUNDS);
 		} catch (e) {
 			console.log('Unable to encrypt password, error: ' + e.message);
 			throw AuthErrors['PASSWORD_ENCRYPTION'];
 		}
+
+		const parsedUser = {
+			...user,
+			password: userPassword,
+		};
+
+		await UserRepository.save(parsedUser);
 	},
 	async checkSessionLogged(
 		this: Repository<Auth>,
@@ -80,12 +83,14 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 
 		return await this.exists({
 			where: {
-				userId,
+				user: {
+					id: userId,
+				},
 			},
 		});
 	},
 	async logoutUser(this: Repository<Auth>, token: string) {
-		await this.createQueryBuilder().where({ token }).delete().execute();
+		await this.delete({ token });
 
 		return await this.exists({ where: { token } });
 	},

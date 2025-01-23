@@ -26,10 +26,11 @@ export class AuthServices {
 	}> {
 		try {
 			await AuthRepository.registerUser(user);
-			return await AuthRepository.loginUser({
+			const tokens = await AuthRepository.loginUser({
 				email: user.email!,
 				password: user.password!,
 			});
+			return tokens;
 		} catch (err) {
 			if (isErrorEntry(err)) {
 				throw err;
@@ -52,8 +53,8 @@ export class AuthServices {
 
 	static async logoutUser(token: string) {
 		try {
-			const deleted = await AuthRepository.logoutUser(token);
-			if (!deleted) {
+			const exists = await AuthRepository.logoutUser(token);
+			if (exists) {
 				throw COMMON_ERRORS['UNKNOWN_ERROR'];
 			}
 		} catch (err) {
