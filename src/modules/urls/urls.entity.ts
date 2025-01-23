@@ -5,22 +5,29 @@ import {
 	PrimaryColumn,
 	BeforeInsert,
 	ManyToOne,
+	JoinColumn,
 } from 'typeorm';
 import { generateUrlId } from './urls.utils';
 import { User } from '../users/users.entity';
 
 @Entity()
 export class Url {
-	@PrimaryColumn({ default: generateUrlId(7) })
+	@PrimaryColumn()
 	id: string;
 
 	@Column()
 	originalUrl: string;
 
-	@Column()
-	@ManyToOne((type) => User, (user: User) => user.id, { onDelete: 'CASCADE' })
-	userId: string;
+	@ManyToOne(() => User, (user: User) => user.urls, {
+		onDelete: 'CASCADE',
+	})
+	user: User;
 
 	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
 	creationDate: Date;
+
+	@BeforeInsert()
+	private beforeInsert() {
+		this.id = generateUrlId(7);
+	}
 }

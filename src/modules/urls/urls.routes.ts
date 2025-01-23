@@ -26,7 +26,6 @@ router.post(
 	'/urls/',
 	checkSchema(URL_POST_VALIDATION),
 	ValidationController.validateWithAuth,
-	UrlController.addUrl,
 );
 router.get(
 	'/urls/',

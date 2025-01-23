@@ -4,8 +4,11 @@ import {
 	Column,
 	OneToMany,
 	BeforeInsert,
+	JoinColumn,
+	OneToOne,
 } from 'typeorm';
 import { Url } from '../urls/urls.entity';
+import { Auth } from '../auth/auth.entity';
 
 @Entity()
 export class User {
@@ -29,6 +32,9 @@ export class User {
 	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
 	creationDate: Date;
 
-	@OneToMany((type) => Url, (url) => url)
+	@OneToMany((type) => Url, (url) => url.user)
 	urls: Url[];
+
+	@OneToOne(() => Auth, (auth) => auth.user)
+	auth: Auth;
 }

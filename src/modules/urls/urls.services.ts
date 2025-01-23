@@ -1,3 +1,4 @@
+import { createQueryBuilder } from 'typeorm';
 import { Url } from './urls.entity';
 import { URL_ERRORS } from './urls.errors';
 import { UrlRepository } from './urls.repository';
@@ -27,13 +28,10 @@ export class UrlServices {
 	}
 
 	static async checkUrlValidOwner(userId: string, urlId: string) {
-		const isValidOwner = await UrlRepository.exists({
-			where: {
-				id: urlId,
-				userId,
-			},
-		});
-		if (!isValidOwner) {
+		const url = await UrlRepository.createQueryBuilder('url')
+			.leftJoinAndSelect('url.user', 'user')
+			.getOne();
+		if (url.user.id != userId) {
 			throw URL_ERRORS['NO_PERMISSION'];
 		}
 	}

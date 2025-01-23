@@ -43,8 +43,9 @@ describe('user', () => {
 		req.userId = (
 			await AuthRepository.findOne({
 				where: { token: tokens.refreshToken },
+				relations: ['user'],
 			})
-		).userId;
+		).user.id;
 
 		req.cookies = {
 			...req.cookies,
@@ -93,8 +94,9 @@ describe('user', () => {
 		req.userId = (
 			await AuthRepository.findOne({
 				where: { token: tokens.refreshToken },
+				relations: ['user'],
 			})
-		).userId;
+		).user.id;
 
 		req.cookies = {
 			...req.cookies,
@@ -134,8 +136,6 @@ describe('user', () => {
 			firstName: 'Apollo',
 			lastName: 'Daniel',
 		};
-		const req = getMockReq({ body: user });
-		const { res } = getMockRes();
 
 		const tokens = await AuthServices.registerUser(user);
 
@@ -143,11 +143,19 @@ describe('user', () => {
 		expect(tokens).toHaveProperty('refreshToken');
 		expect(tokens).toHaveProperty('authToken');
 
-		req.params.id = (
-			await AuthRepository.findOne({
-				where: { token: tokens.refreshToken },
-			})
-		).userId;
+		const req = getMockReq({
+			params: {
+				id: (
+					await AuthRepository.findOne({
+						where: { token: tokens.refreshToken },
+						relations: ['user'],
+					})
+				).user.id,
+			},
+		});
+		const { res } = getMockRes();
+
+		console.log(req.params.id);
 
 		req.cookies = {
 			...req.cookies,

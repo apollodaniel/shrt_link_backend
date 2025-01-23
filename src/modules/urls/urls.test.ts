@@ -10,39 +10,41 @@ import { COOKIE_CONFIG } from '../auth/auth.cookies';
 import { AuthRepository } from '../auth/auth.repository';
 import { UrlController } from './urls.controller';
 import { Url } from './urls.entity';
+import { create } from 'domain';
+import { UrlServices } from './urls.services';
 
 // jest.mock('./auth.services'); // Mocka AuthServices
 
 describe('AuthController', () => {
-	let user: Partial<User>;
+	let user: User;
 	let tokens;
 	beforeAll(async () => {
 		await AppDataSource.initialize().then(() =>
 			console.log('AppDataSource inicializado'),
 		);
 
-		user = {
+		const userRegister = {
 			email: 'apollodaniel@gmail.com',
 			password: 'apollodaniel123',
 			firstName: 'Apollo',
 			lastName: 'Daniel',
 		};
 
-		tokens = await AuthServices.registerUser(user);
+		tokens = await AuthServices.registerUser(userRegister);
 
-		user = await UserRepository.findOne({ where: { email: user.email } });
-	});
-
-	afterEach(async () => {
-		// await UrlRepository.createQueryBuilder().delete().execute();
+		user = await UserRepository.findOne({
+			where: { email: userRegister.email },
+		});
 	});
 
 	afterAll(async () => {
-		// await AuthRepository.createQueryBuilder().delete().execute();
-		// await UserRepository.createQueryBuilder().delete().execute();
+		await UrlRepository.createQueryBuilder().delete().execute();
+		await AuthRepository.createQueryBuilder().delete().execute();
+		await UserRepository.createQueryBuilder().delete().execute();
 		await AppDataSource.destroy();
 	});
 
+	let createdUrl: Url;
 	test('Verifica tokens', () => {
 		expect(tokens).toBeDefined();
 		expect(tokens).toHaveProperty('refreshToken');
@@ -50,10 +52,10 @@ describe('AuthController', () => {
 	});
 
 	test('Cria uma url', async () => {
-		const url: Partial<Url> = {
+		const url = UrlRepository.create({
 			originalUrl: 'https://google.com',
-			userId: user.id,
-		};
+			user: user,
+		});
 
 		const req = getMockReq({ body: url });
 		const { res } = getMockRes();
@@ -62,14 +64,53 @@ describe('AuthController', () => {
 		expect(res.sendStatus).toHaveBeenCalledWith(200);
 		expect(res.send).toHaveBeenCalledTimes(0);
 
-		const createdUrl = await UrlRepository.createQueryBuilder().getOne();
+		createdUrl = await UrlRepository.createQueryBuilder().getOne();
 
 		expect(createdUrl).toBeDefined();
 		expect(createdUrl).toHaveProperty('originalUrl');
-		expect(createdUrl).toHaveProperty('userId');
 		expect(createdUrl).toHaveProperty('id');
 		expect(createdUrl).toHaveProperty('creationDate');
 
 		console.log(createdUrl);
+	});
+
+	test('Pega os dados de uma url', async () => {
+		const urlId = createdUrl.id;
+
+		const req = getMockReq({ params: { id: urlId } });
+		const { res } = getMockRes();
+
+		console.log(req.params);
+		req.userId = user.id;
+
+		await UrlController.getUrl(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(200);
+		expect(res.json).toHaveBeenCalledWith(createdUrl);
+	});
+
+	test('Pega todas as urls de um usuario', async () => {
+		const req = getMockReq();
+		const { res } = getMockRes();
+
+		req.userId = user.id;
+
+		// cria nova url
+		const url: Partial<Url> = UrlRepository.create({
+			originalUrl: 'https://facebook.com',
+			user: user,
+		});
+
+		await UrlServices.addUrl(url);
+
+		const otherCreatedUrl = await UrlRepository.findOne({
+			where: { originalUrl: url.originalUrl },
+		});
+
+		// pega todas as urls
+		await UrlController.getUrls(req, res);
+
+		expect(res.status).toHaveBeenCalledWith(200);
+		expect(res.json).toHaveBeenCalledWith([createdUrl, otherCreatedUrl]);
 	});
 });

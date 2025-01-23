@@ -12,7 +12,8 @@ import { User } from '../users/users.entity';
 export class Auth {
 	@PrimaryColumn({ unique: true })
 	token: string;
-	@ManyToOne((type) => User, (user) => user.id, { onDelete: 'CASCADE' })
-	@JoinColumn({ name: 'userId' })
-	userId: string;
+
+	@OneToOne(() => User, (user) => user.auth, { onDelete: 'CASCADE' })
+	@JoinColumn({ name: 'userId' }) // This sets the foreign key column
+	user: User;
 }

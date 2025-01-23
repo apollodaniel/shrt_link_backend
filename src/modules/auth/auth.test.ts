@@ -26,7 +26,7 @@ describe('AuthController', () => {
 		await AppDataSource.destroy();
 	});
 
-	test.skip('deve registrar o usuario e retornar os tokens', async () => {
+	test('deve registrar o usuario e retornar os tokens', async () => {
 		const user: Partial<User> = {
 			email: 'apollodaniel@gmail.com',
 			password: 'apollodaniel123',

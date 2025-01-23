@@ -42,7 +42,8 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 			const refreshToken = JwtHelper.generateRefreshToken(user.email);
 			const authToken = JwtHelper.generateAuthToken(refreshToken);
 
-			await this.save({ userId: result.id, token: refreshToken });
+			const auth = this.create({ user: result, token: refreshToken });
+			await this.save(auth);
 
 			return { refreshToken, authToken };
 		}
@@ -82,7 +83,9 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 
 		return await this.exists({
 			where: {
-				userId,
+				user: {
+					id: userId,
+				},
 			},
 		});
 	},
