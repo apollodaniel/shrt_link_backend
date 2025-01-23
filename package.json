@@ -1,6 +1,7 @@
 {
 	"name": "shrt_link_backend",
 	"version": "0.0.1",
+	"license": "Apache-2.0",
 	"description": "Awesome project developed with TypeORM.",
 	"type": "commonjs",
 	"devDependencies": {
