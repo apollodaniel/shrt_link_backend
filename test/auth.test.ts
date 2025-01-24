@@ -1,15 +1,11 @@
 import { getMockReq, getMockRes } from '@jest-mock/express';
-import { User } from '../users/users.entity';
-import { AuthController } from './auth.controller';
-import { Request, Response } from 'express';
-import { AuthServices } from './auth.services';
-import { AppDataSource } from '../../data-source';
-import { UserRepository } from '../users/users.repository';
-import { AuthRepository } from './auth.repository';
-import { UrlRepository } from '../urls/urls.repository';
-import { COOKIE_CONFIG } from './auth.cookies';
-
-// jest.mock('./auth.services'); // Mocka AuthServices
+import { AppDataSource } from '../src/data-source';
+import { UserRepository } from '../src/modules/users/users.repository';
+import { AuthRepository } from '../src/modules/auth/auth.repository';
+import { User } from '../src/modules/users/users.entity';
+import { AuthServices } from '../src/modules/auth/auth.services';
+import { AuthController } from '../src/modules/auth/auth.controller';
+import { COOKIE_CONFIG } from '../src/modules/auth/auth.cookies';
 
 describe('AuthController', () => {
 	beforeAll(async () => {

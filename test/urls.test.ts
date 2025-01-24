@@ -1,22 +1,15 @@
 import { getMockReq, getMockRes } from '@jest-mock/express';
-import { User } from '../users/users.entity';
-import { Request, Response } from 'express';
-import { AppDataSource } from '../../data-source';
-import { UserRepository } from '../users/users.repository';
-import { UrlRepository } from '../urls/urls.repository';
-import { AuthServices } from '../auth/auth.services';
-import { AuthController } from '../auth/auth.controller';
-import { COOKIE_CONFIG } from '../auth/auth.cookies';
-import { AuthRepository } from '../auth/auth.repository';
-import { UrlController } from './urls.controller';
-import { Url } from './urls.entity';
-import { create } from 'domain';
-import { UrlServices } from './urls.services';
-import { ConnectionNotFoundError } from 'typeorm';
+import { User } from '../src/modules/users/users.entity';
+import { AppDataSource } from '../src/data-source';
+import { AuthServices } from '../src/modules/auth/auth.services';
+import { UserRepository } from '../src/modules/users/users.repository';
+import { UrlRepository } from '../src/modules/urls/urls.repository';
+import { AuthRepository } from '../src/modules/auth/auth.repository';
+import { Url } from '../src/modules/urls/urls.entity';
+import { UrlController } from '../src/modules/urls/urls.controller';
+import { UrlServices } from '../src/modules/urls/urls.services';
 
-// jest.mock('./auth.services'); // Mocka AuthServices
-
-describe('AuthController', () => {
+describe('UrlController', () => {
 	let user: User;
 	let tokens;
 	beforeAll(async () => {

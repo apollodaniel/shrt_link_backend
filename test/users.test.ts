@@ -1,15 +1,12 @@
 import { getMockReq, getMockRes } from '@jest-mock/express';
-import { AppDataSource } from '../../data-source';
-import { AuthRepository } from '../auth/auth.repository';
-import { UserRepository } from './users.repository';
-import { User } from './users.entity';
-import { AuthServices } from '../auth/auth.services';
-import { COOKIE_CONFIG } from '../auth/auth.cookies';
-import { AuthController } from '../auth/auth.controller';
-import { UserController } from './users.controller';
-import { JwtHelper } from '../common/common.jwt';
+import { AppDataSource } from '../src/data-source';
+import { UserRepository } from '../src/modules/users/users.repository';
+import { AuthRepository } from '../src/modules/auth/auth.repository';
+import { User } from '../src/modules/users/users.entity';
+import { AuthServices } from '../src/modules/auth/auth.services';
+import { UserController } from '../src/modules/users/users.controller';
 
-describe('user', () => {
+describe('UserController', () => {
 	beforeAll(async () => {
 		await AppDataSource.initialize().then(() =>
 			console.log('AppDataSource inicializado'),
