@@ -23,6 +23,7 @@
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/pg": "^8.11.10",
 		"@types/request-ip": "^0.0.41",
+		"@types/ua-parser-js": "^0.7.39",
 		"axios": "^1.7.9",
 		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.7",
@@ -34,7 +35,8 @@
 		"pg": "^8.13.1",
 		"reflect-metadata": "^0.1.13",
 		"request-ip": "^3.3.0",
-		"typeorm": "0.3.20"
+		"typeorm": "0.3.20",
+		"ua-parser-js": "^2.0.0"
 	},
 	"scripts": {
 		"start:dev": "ts-node-dev --inspect --respawn src/index.ts",

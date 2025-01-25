@@ -18,7 +18,7 @@ export class Statistic {
 	url: Url;
 
 	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-	acessTime: Date;
+	accessTime: Date;
 
 	@Column()
 	ipAddress: string;
@@ -44,4 +44,10 @@ export class Statistic {
 
 	@Column('double precision')
 	lon: number;
+
+	@Column()
+	device: string;
+
+	@Column()
+	browser: string;
 }

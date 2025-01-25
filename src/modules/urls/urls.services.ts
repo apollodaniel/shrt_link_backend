@@ -5,6 +5,7 @@ import { Statistic } from '../statistics/statistic.entity';
 import { StatisticRepository } from '../statistics/statistic.repository';
 import { IPLocation } from '../statistics/statistic.type';
 import axios from 'axios';
+import UAParser from 'ua-parser-js';
 
 export class UrlServices {
 	static async getUrl(urlId: string): Promise<Url> {
@@ -50,6 +51,9 @@ export class UrlServices {
 
 			if (response.status == 200) {
 				const location: IPLocation = response.data;
+				const parsedUa = UAParser.UAParser(statistic.userAgent);
+				const device = parsedUa.os.name;
+				const browser = parsedUa.browser.name;
 
 				await StatisticRepository.createStatistic({
 					...statistic,
@@ -60,6 +64,8 @@ export class UrlServices {
 					lat: location.lat,
 					lon: location.lon,
 					city: location.city,
+					device,
+					browser,
 				});
 			}
 		} catch (err: any) {
@@ -69,5 +75,11 @@ export class UrlServices {
 			);
 		}
 		return url;
+	}
+
+	static async getUrlSummary(urlId: string) {
+		await this.checkUrlExists(urlId);
+
+		return await StatisticRepository.getStatisticSummary(urlId);
 	}
 }

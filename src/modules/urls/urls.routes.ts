@@ -4,6 +4,7 @@ import {
 	URL_DELETE_VALIDATION,
 	URL_GET_VALIDATION,
 	URL_POST_VALIDATION,
+	URL_SUMMARY_GET_VALIDATION,
 } from './urls.validation';
 import { ValidationController } from '../validation/validation.controller';
 import { UrlController } from './urls.controller';
@@ -34,5 +35,12 @@ router.get(
 );
 
 router.get('/acess/:id', UrlController.acessUrl);
+
+router.get(
+	'/urls/:id/summary',
+	checkSchema(URL_SUMMARY_GET_VALIDATION),
+	ValidationController.validateWithAuth,
+	UrlController.urlSummary,
+);
 
 export default router;

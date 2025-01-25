@@ -12,6 +12,17 @@ export const URL_GET_VALIDATION: Schema = {
 	},
 };
 
+export const URL_SUMMARY_GET_VALIDATION: Schema = {
+	id: {
+		in: ['params'],
+		isString: {
+			errorMessage: 'id must be a string',
+		},
+		notEmpty: {
+			errorMessage: 'id must not be empty',
+		},
+	},
+};
 export const URL_DELETE_VALIDATION: Schema = {
 	id: {
 		in: ['params'],

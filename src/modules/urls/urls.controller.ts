@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { UrlServices } from './urls.services';
-import { sendErrorResponse } from '../common/common.utils';
+import { isErrorEntry, sendErrorResponse } from '../common/common.utils';
 import { Url } from './urls.entity';
 import { URL_ERRORS } from './urls.errors';
 import { Statistic } from '../statistics/statistic.entity';
@@ -79,6 +79,29 @@ export class UrlController {
 				return;
 			}
 			resp.sendStatus(500);
+			return;
+		}
+	}
+
+	static async urlSummary(req: Request, resp: Response) {
+		const urlId = req.params.id;
+		try {
+			const summary = await UrlServices.getUrlSummary(urlId);
+			console.log(summary);
+
+			resp.json(summary);
+			return;
+		} catch (err: any) {
+			console.log('Could not get url summary: ' + err.message);
+			if (isErrorEntry(err)) {
+				sendErrorResponse(resp, err, this.ERROR_KIND);
+				return;
+			}
+			sendErrorResponse(
+				resp,
+				URL_ERRORS['UNKNOWN_ERROR'],
+				this.ERROR_KIND,
+			);
 			return;
 		}
 	}

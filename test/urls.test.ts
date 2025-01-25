@@ -236,4 +236,22 @@ describe('UrlController', () => {
 
 		console.log(urlWithStatistic);
 	});
+
+	test('pega url summary', async () => {
+		let url = await UrlRepository.findOne({
+			where: {},
+		});
+
+		const req = getMockReq({
+			params: { id: url.id },
+		});
+		const { res } = getMockRes();
+
+		await UrlController.urlSummary(req, res);
+		const summary = await UrlServices.getUrlSummary(url.id);
+		expect(res.json).toHaveBeenCalledWith(summary);
+		expect(res.sendStatus).not.toHaveBeenCalled();
+
+		console.log(summary);
+	});
 });
