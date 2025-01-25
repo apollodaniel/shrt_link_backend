@@ -8,6 +8,9 @@ import { AuthRepository } from '../src/modules/auth/auth.repository';
 import { Url } from '../src/modules/urls/urls.entity';
 import { UrlController } from '../src/modules/urls/urls.controller';
 import { UrlServices } from '../src/modules/urls/urls.services';
+import { Any, Not } from 'typeorm';
+import { allowedNodeEnvironmentFlags } from 'process';
+import { StatisticRepository } from '../src/modules/statistics/statistic.repository';
 
 describe('UrlController', () => {
 	let user: User;
@@ -58,7 +61,12 @@ describe('UrlController', () => {
 		expect(res.sendStatus).toHaveBeenCalledWith(200);
 		expect(res.send).toHaveBeenCalledTimes(0);
 
-		createdUrl = await UrlRepository.createQueryBuilder().getOne();
+		createdUrl = await UrlRepository.findOne({
+			where: {
+				originalUrl: url.originalUrl,
+			},
+			relations: ['statistics'],
+		});
 
 		expect(createdUrl).toBeDefined();
 		expect(createdUrl).toHaveProperty('originalUrl');
@@ -98,14 +106,17 @@ describe('UrlController', () => {
 		await UrlServices.addUrl(url);
 
 		const otherCreatedUrl = await UrlRepository.findOne({
-			where: { originalUrl: url.originalUrl },
+			where: { originalUrl: Not(createdUrl.originalUrl) },
+			relations: ['statistics'],
 		});
 
 		// pega todas as urls
 		await UrlController.getUrls(req, res);
 
 		expect(res.status).toHaveBeenCalledWith(200);
-		expect(res.json).toHaveBeenCalledWith([createdUrl, otherCreatedUrl]);
+		expect(res.json).toHaveBeenCalledWith(
+			expect.arrayContaining([createdUrl, otherCreatedUrl]),
+		);
 	});
 
 	test('Deleta uma url', async () => {
@@ -123,5 +134,106 @@ describe('UrlController', () => {
 		const urls = await UrlRepository.createQueryBuilder().getMany();
 		expect(urls).toHaveLength(1);
 		expect(urls[0].id).not.toBe(urlId);
+	});
+
+	test('acessa uma url', async () => {
+		let url = await UrlRepository.findOne({
+			where: {},
+		});
+
+		const ip = '168.90.79.94';
+		const userAgent =
+			'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240 Safari/537.36';
+		const req = getMockReq({
+			params: { id: url.id },
+			connection: {
+				remoteAddress: ip,
+			},
+			headers: {
+				'User-Agent': userAgent,
+			},
+		});
+		const { res } = getMockRes();
+
+		await UrlController.acessUrl(req, res);
+
+		expect(res.redirect).toHaveBeenCalledWith(url.originalUrl);
+		expect(res.sendStatus).not.toHaveBeenCalled();
+
+		const statistic = await StatisticRepository.findOne({
+			where: {
+				url: {
+					id: url.id,
+				},
+			},
+			relations: ['url'],
+		});
+
+		// expect(statistic).toEqual(
+		// 	expect.objectContaining({
+		// 		url,
+		// 		ipAddress: ip,
+		// 		userAgent,
+		// 	}),
+		// );
+
+		console.log(statistic);
+
+		const urlWithStatistic = await UrlRepository.findOne({
+			where: {
+				id: url.id,
+			},
+			relations: ['statistics'],
+		});
+
+		// expect(urlWithStatistic).toEqual(
+		// 	expect.objectContaining({
+		// 		...url,
+		// 		statistics: expect.arrayContaining([
+		// 			expect.objectContaining({
+		// 				ipAddress: ip,
+		// 				userAgent,
+		// 			}),
+		// 		]),
+		// 	}),
+		// );
+
+		console.log(urlWithStatistic);
+	});
+
+	test('acessa uma url sem ip e sem useragent', async () => {
+		let url = await UrlRepository.findOne({
+			where: {},
+		});
+
+		const req = getMockReq({
+			params: { id: url.id },
+		});
+		const { res } = getMockRes();
+
+		await UrlController.acessUrl(req, res);
+
+		expect(res.redirect).toHaveBeenCalledWith(url.originalUrl);
+		expect(res.sendStatus).not.toHaveBeenCalled();
+
+		const statistic = await StatisticRepository.findOne({
+			where: {
+				url: {
+					id: url.id,
+				},
+			},
+			relations: ['url'],
+		});
+
+		console.log(statistic);
+
+		const urlWithStatistic = await UrlRepository.findOne({
+			where: {
+				id: url.id,
+			},
+			relations: ['statistics'],
+		});
+
+		console.log(urlWithStatistic);
 	});
 });

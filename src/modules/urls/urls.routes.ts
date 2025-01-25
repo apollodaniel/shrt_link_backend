@@ -33,4 +33,6 @@ router.get(
 	UrlController.getUrls,
 );
 
+router.get('/acess/:id', UrlController.acessUrl);
+
 export default router;

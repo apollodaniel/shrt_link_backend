@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { User } from './modules/users/users.entity';
 import { Auth } from './modules/auth/auth.entity';
 import { Url } from './modules/urls/urls.entity';
+import { Statistic } from './modules/statistics/statistic.entity';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
 	database: process.env.POSTGRES_DB,
 	synchronize: true,
 	logging: false,
-	entities: [User, Auth, Url],
+	entities: [User, Auth, Url, Statistic],
 	migrations: [],
 	subscribers: [],
 });

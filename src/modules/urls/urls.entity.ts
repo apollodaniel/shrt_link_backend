@@ -1,14 +1,14 @@
 import {
 	Entity,
-	PrimaryGeneratedColumn,
 	Column,
 	PrimaryColumn,
 	BeforeInsert,
 	ManyToOne,
-	JoinColumn,
+	OneToMany,
 } from 'typeorm';
 import { generateUrlId } from './urls.utils';
 import { User } from '../users/users.entity';
+import { Statistic } from '../statistics/statistic.entity';
 
 @Entity()
 export class Url {
@@ -22,6 +22,11 @@ export class Url {
 		onDelete: 'CASCADE',
 	})
 	user: User;
+
+	@OneToMany(() => Statistic, (statistic) => statistic.url, {
+		onDelete: 'CASCADE',
+	})
+	statistics: Statistic[];
 
 	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
 	creationDate: Date;
