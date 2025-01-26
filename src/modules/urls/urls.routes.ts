@@ -34,8 +34,6 @@ router.get(
 	UrlController.getUrls,
 );
 
-router.get('/acess/:id', UrlController.acessUrl);
-
 router.get(
 	'/urls/:id/summary',
 	checkSchema(URL_SUMMARY_GET_VALIDATION),

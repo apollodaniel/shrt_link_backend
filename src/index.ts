@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mainRouter from './modules/main';
+import { UrlController } from './modules/urls/urls.controller';
 
 dotenv.config();
 
@@ -13,7 +14,9 @@ const app = express();
 app.use(cors({ origin: '*' }));
 app.use(cookieParser(process.env.COOKIE_ENCRIPTION_KEY));
 app.use(express.json());
+
 app.use('/api/v1/', mainRouter);
+app.get('/:id', UrlController.acessUrl);
 
 AppDataSource.initialize()
 	.then(async () => {
