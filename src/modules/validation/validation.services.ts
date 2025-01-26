@@ -6,7 +6,9 @@ export class ValidationServices {
 		return await AuthRepository.exists({
 			where: {
 				token,
-				userId,
+				user: {
+					id: userId,
+				},
 			},
 		});
 	}

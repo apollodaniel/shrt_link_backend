@@ -35,18 +35,8 @@ export class ValidationController {
 		};
 		try {
 			// verify refresh token
-			const userId = JwtHelper.verifyToken(
-				tokens.refreshToken,
-				'Refresh',
-			);
-			req.userId = userId;
-			const isRefreshTokenValid =
-				await ValidationServices.checkSessionMatch(
-					userId,
-					tokens.refreshToken,
-				);
-			if (!isRefreshTokenValid) {
-				// logout user in case it doesn't match
+			if (!JwtHelper.isValidRefreshToken(tokens.refreshToken)) {
+				// logout user in case it's not valid
 				await AuthServices.logoutUser(tokens.refreshToken);
 
 				resp.clearCookie(
@@ -65,11 +55,14 @@ export class ValidationController {
 				return;
 			}
 
-			// verify auth token
-			const authPayload = JwtHelper.verifyToken(tokens.authToken, 'Auth');
+			const userId = JwtHelper.verifyToken(
+				tokens.refreshToken,
+				'Refresh',
+			);
+			req.userId = userId;
 
 			// refresh auth token
-			if (authPayload != tokens.refreshToken) {
+			if (!JwtHelper.isValidAuthToken(tokens.authToken)) {
 				resp.clearCookie(
 					COOKIE_CONFIG['authToken'].name,
 					COOKIE_CONFIG['authToken'].config,
@@ -88,6 +81,7 @@ export class ValidationController {
 			next();
 			return;
 		} catch (err: any) {
+			console.log(err);
 			sendErrorResponse(resp, err, this.ERROR_KIND);
 			return;
 		}

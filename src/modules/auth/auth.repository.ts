@@ -39,7 +39,7 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		}
 		if (isPasswordMatch) {
 			// credentials correct
-			const refreshToken = JwtHelper.generateRefreshToken(user.email);
+			const refreshToken = JwtHelper.generateRefreshToken(result.id);
 			const authToken = JwtHelper.generateAuthToken(refreshToken);
 
 			const auth = this.create({ user: result, token: refreshToken });
@@ -90,7 +90,7 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		});
 	},
 	async logoutUser(this: Repository<Auth>, token: string) {
-		await this.delete({ token });
+		await this.createQueryBuilder().where({ token }).delete().execute();
 
 		return await this.exists({ where: { token } });
 	},

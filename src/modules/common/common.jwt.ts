@@ -9,8 +9,8 @@ export class JwtHelper {
 			expiresIn: process.env.JWT_AUTHT_EXPIRESIN,
 		});
 	}
-	static generateRefreshToken(email: string) {
-		return jwt.sign({ email }, process.env.JWT_AUTHT_KEY, {});
+	static generateRefreshToken(userId: string) {
+		return jwt.sign({ userId }, process.env.JWT_REFRESHT_KEY, {});
 	}
 	static verifyToken(token: string, type: 'Auth' | 'Refresh'): any {
 		switch (type) {
@@ -29,7 +29,40 @@ export class JwtHelper {
 						process.env.JWT_REFRESHT_KEY,
 						{},
 					) as JwtPayload
-				).email;
+				).userId;
+		}
+	}
+	static isValidAuthToken(token: string, refreshToken?: string): boolean {
+		try {
+			const authTokenResult = (
+				jwt.verify(token, process.env.JWT_AUTHT_KEY, {}) as JwtPayload
+			).refreshToken;
+
+			if (refreshToken) {
+				return authTokenResult == refreshToken;
+			}
+			return true;
+		} catch (err: any) {
+			return false;
+		}
+	}
+
+	static isValidRefreshToken(token: string, userId?: string): boolean {
+		try {
+			const refreshTokenResult = (
+				jwt.verify(
+					token,
+					process.env.JWT_REFRESHT_KEY,
+					{},
+				) as JwtPayload
+			).userId;
+
+			if (userId) {
+				return refreshTokenResult == userId;
+			}
+			return true;
+		} catch (err: any) {
+			return false;
 		}
 	}
 }
