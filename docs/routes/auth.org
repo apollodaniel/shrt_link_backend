@@ -1,7 +1,4 @@
 #+title: Auth routes
-
-
-* Auth routes
 Auth routes are located at =/api/v1/auth/=.
 
 ** POST  =/auth/register/=

@@ -1,6 +1,4 @@
 #+title: User Routes
-
-* User Routes
 User routes are located at =/api/v1/users/=.
 
 #+BEGIN_QUOTE

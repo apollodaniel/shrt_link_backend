@@ -1,6 +1,5 @@
 #+title: Main Routes
 
-* Main Routes
 Main routes are the routes that run on project root =/=
 ** GET  =/:id=
 Acess a url by its id ( a 7 char code )

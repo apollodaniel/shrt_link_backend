@@ -1,9 +1,5 @@
 #+title: Authentication
 
-* Authentication
-:PROPERTIES:
-:CUSTOM_ID: auth
-:END:
 Authentication is implemented using JSON Web Tokens (JWT) in the [[#validation-middlewares][validation middlewares]].
 
 The user session is stored in a database table called *auth*, which contains the =refreshToken= and =userId=.

@@ -1,9 +1,5 @@
 #+title: Routes
 
-* Routes
-:PROPERTIES:
-:ID: routes
-:END:
 ** [[file:main.org][Main]]
 *** GET  =/:id=
 Acess a url by its id ( a 7 char code )

@@ -1,9 +1,4 @@
 #+title: Types
-
-* Types
-:PROPERTIES:
-:CUSTOM_ID: types
-:END:
 This project includes some custom type implementations that extend certain libraries, such as Express' Request object, and custom types for general purposes.
 
 ** Custom Request

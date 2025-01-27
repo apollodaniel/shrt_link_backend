@@ -1,9 +1,5 @@
 #+title: shrt_link backend documentation
 
-* **shrt_link** backend
-:PROPERTIES:
-:ID: index
-:END:
 This is the backend for the *shrt_link* project, a link shortener created for learning purposes.
 
 Some of the technologies used are:
@@ -15,12 +11,28 @@ Some of the technologies used are:
 
 The project is still in development and has room to mature, but for now, it is functioning quite well.
 
-
+* Table of contents
+- [[#file-structure][File Structure]]
+- [[file:auth.org::#auth][Authorization]]
+  - [[file:auth.org::#validation-middlewares][Validation middlewares]]
+- [[file:routes/index.org][Routes]]
+  - [[file:routes/main.org][Main]]
+  - [[file:routes/users.org][User]]
+  - [[file:routes/auth.org][Auth]]
+  - [[file:routes/urls.org][Url]]
+- [[file:types.org::#types][Types]]
+  - [[file:types.org::#custom-request][Custom Request]]
+  - [[file:types.org::#custom-types][Custom types]]
+- [[file:tests.org][Tests]]
+  - [[file:tests.org::#auth-tests][Auth Tests]]
+  - [[file:tests.org::#user-tests][User Tests]]
+  - [[file:tests.org::#url-tests][Url Tests]]
+  - [[file:tests.org::#validation-tests][Validation Tests]]
 
 * File Structure
 
 :PROPERTIES:
-:ID: file-tree
+:CUSTOM_ID: file-tree
 :END:
 #+begin_src
 src
