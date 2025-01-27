@@ -1,10 +1,6 @@
 #+title: Readme
 #+author: Apollo Daniel
 
-* **shrt_link** backend
-:PROPERTIES:
-:ID: index
-:END:
 This is the backend for the *shrt_link* project, a link shortener created for learning purposes.
 
 Some of the technologies used are:
