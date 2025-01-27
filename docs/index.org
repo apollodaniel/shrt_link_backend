@@ -1,0 +1,86 @@
+#+title: shrt_link backend documentation
+
+* **shrt_link** backend
+:PROPERTIES:
+:ID: index
+:END:
+This is the backend for the *shrt_link* project, a link shortener created for learning purposes.
+
+Some of the technologies used are:
+- Express
+- PostgreSQL
+- JSON Web Token
+- TypeORM
+- Redis (planned for future implementation)
+
+The project is still in development and has room to mature, but for now, it is functioning quite well.
+
+
+
+* File Structure
+
+:PROPERTIES:
+:ID: file-tree
+:END:
+#+begin_src
+src
+├── data-source.ts
+├── index.ts
+├── migration
+└── modules
+    ├── auth
+    │   ├── auth.controller.ts
+    │   ├── auth.cookies.ts
+    │   ├── auth.entity.ts
+    │   ├── auth.errors.ts
+    │   ├── auth.repository.ts
+    │   ├── auth.routes.ts
+    │   ├── auth.services.ts
+    │   ├── auth.types.ts
+    │   ├── auth.validation.login.ts
+    │   └── auth.validation.register.ts
+    ├── common
+    │   ├── common.constants.ts
+    │   ├── common.errors.ts
+    │   ├── common.jwt.ts
+    │   ├── common.middlewares.ts
+    │   ├── common.types.ts
+    │   └── common.utils.ts
+    ├── main.ts
+    ├── statistics
+    │   ├── statistic.entity.ts
+    │   ├── statistic.errors.ts
+    │   ├── statistic.repository.ts
+    │   ├── statistics.entity.ts
+    │   ├── statistic.services.ts
+    │   └── statistic.type.ts
+    ├── urls
+    │   ├── urls.controller.ts
+    │   ├── urls.entity.ts
+    │   ├── urls.errors.ts
+    │   ├── urls.repository.ts
+    │   ├── urls.routes.ts
+    │   ├── urls.services.ts
+    │   ├── urls.utils.ts
+    │   └── urls.validation.ts
+    ├── users
+    │   ├── users.controller.ts
+    │   ├── users.entity.ts
+    │   ├── users.errors.ts
+    │   ├── users.repository.ts
+    │   ├── users.routes.ts
+    │   ├── users.services.ts
+    │   └── users.validation.ts
+    └── validation
+        ├── validation.controller.ts
+        ├── validation.errors.ts
+        └── validation.services.ts
+test
+├── auth.test.ts
+├── urls.test.ts
+├── users.test.ts
+└── validation.test.ts
+types
+└── express
+    └── index.d.ts
+#+end_src

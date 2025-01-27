@@ -1,33 +1,19 @@
 #+title: Readme
 #+author: Apollo Daniel
 
-* Table of Contents :toc:
-- [[#shrt-link-backend][*shrt link* Backend]]
-- [[#file-structure][File Structure]]
-  - [[#src][src/]]
+* **shrt_link** backend
+:PROPERTIES:
+:ID: index
+:END:
+This is the backend for the *shrt_link* project, a link shortener created for learning purposes.
 
-* *shrt link* Backend
-shrt link backend based on express, and postgresql.
+Some of the technologies used are:
+- Express
+- PostgreSQL
+- JSON Web Token
+- TypeORM
+- Redis (planned for future implementation)
 
-* File Structure
-** src/
-*** index.ts
-*** data-source.ts
-*** modules/
-**** users/
-- users.entity.ts
-- users.repository.ts
-- users.controller.ts
-- users.routes.ts
-**** urls/
-- urls.entity.ts
-- urls.repository.ts
-- urls.controller.ts
-- urls.routes.ts
-**** auth/
-- auth.entity.ts
-- auth.repository.ts
-- auth.controller.ts
-- auth.routes.ts
-**** common/
-- common.types.ts
+The project is still in development and has room to mature, but for now, it is functioning quite well.
+
+For detailed info check the *wiki*

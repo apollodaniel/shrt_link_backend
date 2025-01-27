@@ -1,0 +1,14 @@
+#+title:  Sidebar
+
+* [[file:index.org][Index]]
+** [[file:index.org::#file-tree][File tree]]
+** [[file:auth.org::#auth][Authorization]]
+*** [[file:auth.org::#validation-middlewares][Validation middlewares]]
+** [[file:routes/index.org][Routes]]
+*** [[file:routes/main.org][Main]]
+*** [[file:routes/users.org][User]]
+*** [[file:routes/auth.org][Auth]]
+*** [[file:routes/urls.org][Url]]
+** [[file:types.org::#types][Types]]
+*** [[file:types.org::#custom-request][Custom Request]]
+*** [[file:types.org::#custom-types][Custom types]]

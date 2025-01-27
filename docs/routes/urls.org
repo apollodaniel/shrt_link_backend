@@ -1,0 +1,51 @@
+#+title: Urls
+
+* URL Routes
+URL routes are located at =/api/v1/urls/=.
+
+#+BEGIN_QUOTE
+ℹ️ **Info:** URL routes require authentication.
+See more in [[file:../auth.org][Authentication]].
+#+END_QUOTE
+
+** POST  =/urls/=
+Add a new URL.
+
+*** Required Fields
+**** =originalUrl= *required*
+The URL to be shortened.
+
+Type: string
+
+** GET  =/urls/:id=
+Retrieve a URL by its ID.
+
+*** Required Fields
+**** =id= *required*
+The ID of the URL being retrieved.
+
+Type: string
+
+** DELETE  =/urls/:id=
+Delete a URL by its ID.
+
+*** Required Fields
+**** =id= *required*
+The ID of the URL being deleted.
+
+Type: string
+
+** GET  =/urls/=
+Retrieve all URLs associated with a user (=req.userId=).
+
+*** Required Fields
+No fields are required.
+
+** GET  =/urls/:id/summary=
+Retrieve statistics for a URL by its ID, such as total clicks, clicks by country, etc.
+
+*** Required Fields
+**** =id= *required*
+The ID of the URL for which the summary is being retrieved.
+
+Type: string

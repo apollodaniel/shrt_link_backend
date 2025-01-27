@@ -1,0 +1,42 @@
+#+title: Types
+
+* Types
+:PROPERTIES:
+:CUSTOM_ID: types
+:END:
+This project includes some custom type implementations that extend certain libraries, such as Express' Request object, and custom types for general purposes.
+
+** Custom Request
+:PROPERTIES:
+:CUSTOM_ID: custom-request
+:END:
+We use a "custom" request interface for Express. It is an extension of the original Request interface, adding a =userId= field to simplify the process of accessing the user ID in authenticated routes.
+
+Note that this can cause errors if used in routes that do not validate authentication with *ValidationController.validateWithAuth*.
+
+It is declared in =types/index.d.ts=:
+#+begin_src js
+import 'express';
+
+declare global {
+	namespace Express {
+		interface Request {
+			userId?: string;
+		}
+	}
+}
+#+end_src
+
+** Custom Types
+:PROPERTIES:
+:CUSTOM_ID: custom-types
+:END:
+The custom types are located in =src/modules/<module>/<module>.types.ts= and define types specific to individual modules. Here's an example:
+
+*** Auth Types ( =src/modules/auth/auth.types.ts= )
+#+begin_src js
+export interface AuthCredentials {
+	email: string;
+	password: string;
+}
+#+end_src

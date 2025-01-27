@@ -1,0 +1,17 @@
+#+title: Main Routes
+
+* Main Routes
+Main routes are the routes that run on project root =/=
+** GET  =/:id=
+Acess a url by its id ( a 7 char code )
+
+When acessing this route the endpoint get some information from the client,
+like User-Agent, Ip Adress and save the statistics for url summary.
+
+In case of error when getting ip adress geo-location or getting user-agent, the statistic is *NOT* saved on database.
+
+The response may redirect user to the requested url.
+** Required fields
+*** id
+A 7 char long Id that represents the shortned url
+Location: request params

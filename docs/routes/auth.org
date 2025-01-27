@@ -1,0 +1,49 @@
+#+title: Auth routes
+
+
+* Auth routes
+Auth routes are located at =/api/v1/auth/=.
+
+** POST  =/auth/register/=
+Add a new URL.
+
+*** Required Fields
+**** =firstName= *required*
+The first name for the registration.
+
+Type: string
+**** =lastName= *required*
+The last name for the registration.
+
+Type: string
+**** =email= *required*
+The email for the registration.
+
+Type: string
+**** =password= *required*
+The password for the registration.
+
+Type: string
+
+** POST  =/auth/login/=
+Add a new URL.
+
+*** Required Fields
+**** =email= *required*
+The email for the authentication.
+
+Type: string
+**** =password= *required*
+The password for the authentication.
+
+Type: string
+
+** POST  =/auth/logout/=
+Add a new URL.
+
+#+begin_quote
+*Authentication required*
+#+end_quote
+
+*** Required Fields
+	No required fields

@@ -1,0 +1,30 @@
+#+title: User Routes
+
+* User Routes
+User routes are located at =/api/v1/users/=.
+
+#+BEGIN_QUOTE
+ℹ️ **Info:** User routes require authentication.
+See more in [[file:../auth.org][Authentication]].
+#+END_QUOTE
+
+** GET  =/users/:id=
+Retrieve information about a user by their ID.
+
+*** Required Fields
+**** =id= *required*
+The ID of the user being retrieved.
+
+Type: string
+
+** GET  =/users/current=
+Retrieve information about the current user using =req.userId=.
+
+*** Required Fields
+No fields are required.
+
+** DELETE  =/users/current=
+Delete the current user using =req.userId=.
+
+*** Required Fields
+No fields are required.

@@ -1,0 +1,39 @@
+#+title: Authentication
+
+* Authentication
+:PROPERTIES:
+:CUSTOM_ID: auth
+:END:
+Authentication is implemented using JSON Web Tokens (JWT) in the [[#validation-middlewares][validation middlewares]].
+
+The user session is stored in a database table called *auth*, which contains the =refreshToken= and =userId=.
+
+** Validation Middlewares
+:PROPERTIES:
+:CUSTOM_ID: validation-middlewares
+:END:
+Validation middlewares are responsible for validating fields and user authentication in requests.
+
+*** How It Works
+There are two validation middlewares: =validate= and =validateWithAuth=.
+
+The =validate= middleware checks the fields using =express-validator=.
+The =validateWithAuth= middleware first uses the =validate= middleware to validate the fields and then validates the user tokens.
+
+*** Validate With Auth
+This middleware is responsible for handling authorization in most routes.
+
+The middleware first checks for tokens (=refreshToken= and =authToken=) in the request cookies.
+
+Once all token checks are successfully passed, it sets the =userId= property on the request.
+
+#+begin_quote
+ℹ️ **Info:** The =userId= property is not native to the Express package. It is an extended interface for the request, defined in =/types/index.d.ts=.
+#+end_quote
+
+**** Auth Token
+For the auth token, the middleware verifies whether it is valid and not expired.
+If the token is expired, it refreshes it and sets the new cookie in the response.
+
+**** Refresh Token
+If the refresh token is invalid, the middleware clears the token cookies and removes the authorized session from the database.
