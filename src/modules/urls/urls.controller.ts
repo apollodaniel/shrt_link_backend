@@ -105,4 +105,25 @@ export class UrlController {
 			return;
 		}
 	}
+	static async generalUrlSummary(req: Request, resp: Response) {
+		try {
+			const summary = await UrlServices.getGeneralSummary(req.userId);
+			console.log(summary);
+
+			resp.json(summary);
+			return;
+		} catch (err: any) {
+			console.log('Could not get url summary: ' + err);
+			if (isErrorEntry(err)) {
+				sendErrorResponse(resp, err, this.ERROR_KIND);
+				return;
+			}
+			sendErrorResponse(
+				resp,
+				URL_ERRORS['UNKNOWN_ERROR'],
+				this.ERROR_KIND,
+			);
+			return;
+		}
+	}
 }

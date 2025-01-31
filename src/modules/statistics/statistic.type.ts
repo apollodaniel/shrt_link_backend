@@ -26,3 +26,13 @@ export type UrlSummary = {
 	totalClicks: number;
 	url: Url;
 };
+
+export type UrlGeneralSummary = {
+	countByCountry: { country: string; count: number }[];
+	countByDevice: { device: string; count: number }[];
+	countByBrowser: { browser: string; count: number }[];
+	countByDay: { day: number; count: number }[];
+	countByTimeOfDay: { hour: number; count: number }[];
+	totalClicks: number;
+	countByUrlId: { urlId: string; count: number }[];
+};

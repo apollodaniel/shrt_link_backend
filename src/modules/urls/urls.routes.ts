@@ -42,4 +42,10 @@ router.get(
 	UrlController.urlSummary,
 );
 
+router.get(
+	'/urls/summary',
+	ValidationController.validateWithAuth,
+	UrlController.generalUrlSummary,
+);
+
 export default router;

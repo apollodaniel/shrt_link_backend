@@ -82,4 +82,7 @@ export class UrlServices {
 
 		return await StatisticRepository.getStatisticSummary(urlId);
 	}
+	static async getGeneralSummary(userId: string) {
+		return await StatisticRepository.getGeneralStatisticSummary(userId);
+	}
 }
