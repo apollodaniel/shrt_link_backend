@@ -16,6 +16,9 @@ router.post(
 	checkSchema(LOGIN_POST_VALIDATION),
 	AuthController.loginUser,
 );
+
 router.post('/auth/logout', AuthController.logoutUser);
+
+router.get('/auth/check-session', AuthController.checkSession);
 
 export default router;

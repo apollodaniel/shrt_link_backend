@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { getClientIp } from 'request-ip';
 import { JwtHelper } from './common.jwt';
 
 export class Middlewares {
@@ -34,5 +35,16 @@ export class Middlewares {
 		} catch (err: any) {
 			resp.status(400);
 		}
+	}
+	static async logginMiddleware(
+		req: Request,
+		resp: Response,
+		next: NextFunction,
+	) {
+		console.log(
+			`${req.method} - ${getClientIp(req)} - ${req.url} - ${new Date(Date.now())}`,
+		);
+
+		next();
 	}
 }

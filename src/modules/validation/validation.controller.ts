@@ -50,7 +50,7 @@ export class ValidationController {
 				sendErrorResponse(
 					resp,
 					AuthErrors['NO_SESSION'],
-					this.ERROR_KIND,
+					ValidationController.ERROR_KIND,
 				);
 				return;
 			}
@@ -82,7 +82,7 @@ export class ValidationController {
 			return;
 		} catch (err: any) {
 			console.log(err);
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, ValidationController.ERROR_KIND);
 			return;
 		}
 	}

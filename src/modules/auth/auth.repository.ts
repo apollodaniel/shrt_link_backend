@@ -39,11 +39,24 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		}
 		if (isPasswordMatch) {
 			// credentials correct
-			const refreshToken = JwtHelper.generateRefreshToken(result.id);
+
+			let existingAuth = await this.findOne({
+				where: {
+					user: {
+						id: result.id,
+					},
+				},
+			});
+
+			const refreshToken = existingAuth
+				? existingAuth.token
+				: JwtHelper.generateRefreshToken(result.id);
 			const authToken = JwtHelper.generateAuthToken(refreshToken);
 
-			const auth = this.create({ user: result, token: refreshToken });
-			await this.save(auth);
+			if (!existingAuth) {
+				let auth = this.create({ user: result, token: refreshToken });
+				await this.save(auth);
+			}
 
 			return { refreshToken, authToken };
 		}

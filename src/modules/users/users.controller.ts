@@ -15,7 +15,7 @@ export class UserController {
 			resp.status(200).json(user);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UserController.ERROR_KIND);
 			return;
 		}
 	}
@@ -26,7 +26,7 @@ export class UserController {
 			resp.status(200).json(user);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UserController.ERROR_KIND);
 			return;
 		}
 	}
@@ -53,7 +53,7 @@ export class UserController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UserController.ERROR_KIND);
 		}
 	}
 }

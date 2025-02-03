@@ -19,7 +19,7 @@ export class UrlController {
 			resp.status(200).json(url);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 		}
 	}
 
@@ -31,7 +31,7 @@ export class UrlController {
 			resp.status(200).json(urls);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 		}
 	}
 	static async addUrl(req: Request, resp: Response) {
@@ -42,7 +42,7 @@ export class UrlController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 		}
 	}
 	static async deleteUrl(req: Request, resp: Response) {
@@ -54,7 +54,7 @@ export class UrlController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 		}
 	}
 	static async acessUrl(req: Request, resp: Response) {
@@ -94,13 +94,13 @@ export class UrlController {
 		} catch (err: any) {
 			console.log('Could not get url summary: ' + err.message);
 			if (isErrorEntry(err)) {
-				sendErrorResponse(resp, err, this.ERROR_KIND);
+				sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 				return;
 			}
 			sendErrorResponse(
 				resp,
 				URL_ERRORS['UNKNOWN_ERROR'],
-				this.ERROR_KIND,
+				UrlController.ERROR_KIND,
 			);
 			return;
 		}
@@ -115,13 +115,13 @@ export class UrlController {
 		} catch (err: any) {
 			console.log('Could not get url summary: ' + err);
 			if (isErrorEntry(err)) {
-				sendErrorResponse(resp, err, this.ERROR_KIND);
+				sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 				return;
 			}
 			sendErrorResponse(
 				resp,
 				URL_ERRORS['UNKNOWN_ERROR'],
-				this.ERROR_KIND,
+				UrlController.ERROR_KIND,
 			);
 			return;
 		}

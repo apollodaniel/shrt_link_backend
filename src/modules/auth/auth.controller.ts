@@ -4,6 +4,8 @@ import { User } from '../users/users.entity';
 import { sendErrorResponse } from '../common/common.utils';
 import { COOKIE_CONFIG } from './auth.cookies';
 import { AuthCredentials } from './auth.types';
+import { JwtHelper } from '../common/common.jwt';
+import { AuthErrors } from './auth.errors';
 
 export class AuthController {
 	private static ERROR_KIND = 'Auth';
@@ -28,7 +30,8 @@ export class AuthController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			console.log(err.message);
+			sendErrorResponse(resp, err, AuthController.ERROR_KIND);
 			return;
 		}
 	}
@@ -55,7 +58,7 @@ export class AuthController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, AuthController.ERROR_KIND);
 			return;
 		}
 	}
@@ -81,7 +84,26 @@ export class AuthController {
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
-			sendErrorResponse(resp, err, this.ERROR_KIND);
+			sendErrorResponse(resp, err, AuthController.ERROR_KIND);
+			return;
+		}
+	}
+
+	static async checkSession(req: Request, resp: Response): Promise<void> {
+		const refreshToken = req.cookies.refreshToken;
+		try {
+			// verify refresh token
+			if (!refreshToken || !JwtHelper.isValidRefreshToken(refreshToken)) {
+				// logout user in case it's not valid
+				resp.sendStatus(401);
+				return;
+			}
+
+			resp.sendStatus(200);
+			return;
+		} catch (err: any) {
+			console.log(err);
+			sendErrorResponse(resp, err, AuthController.ERROR_KIND);
 			return;
 		}
 	}

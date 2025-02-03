@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { ErrorEntry } from './common.types';
 import { COMMON_ERRORS } from './common.errors';
-import { log } from 'console';
 
 export function isErrorEntry(err: any): err is ErrorEntry {
 	return (
@@ -16,7 +15,6 @@ export function isErrorEntry(err: any): err is ErrorEntry {
 
 export function sendErrorResponse(resp: Response, err: any, kind: string) {
 	const errorEntry = isErrorEntry(err) ? err : COMMON_ERRORS['UNKNOWN_ERROR'];
-	log(err.message);
 
 	return resp.status(errorEntry.statusCode).json({
 		...errorEntry,
