@@ -6,7 +6,7 @@ dotenv.config();
 export class JwtHelper {
 	static generateAuthToken(refreshToken: string) {
 		return jwt.sign({ refreshToken }, process.env.JWT_AUTHT_KEY, {
-			expiresIn: process.env.JWT_AUTHT_EXPIRESIN,
+			expiresIn: Number(process.env.JWT_AUTHT_EXPIRESIN || 1800),
 		});
 	}
 	static generateRefreshToken(userId: string) {
