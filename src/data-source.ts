@@ -8,16 +8,34 @@ import { Statistic } from './modules/statistics/statistic.entity';
 
 dotenv.config();
 
-export const AppDataSource = new DataSource({
-	type: 'postgres',
-	host: process.env.POSTGRES_HOST,
-	port: Number(process.env.POSTGRES_PORT || 5432),
-	username: process.env.POSTGRES_USER,
-	password: process.env.POSTGRES_PASSWORD,
-	database: process.env.POSTGRES_DB,
-	synchronize: true,
-	logging: false,
-	entities: [User, Auth, Url, Statistic],
-	migrations: [],
-	subscribers: [],
-});
+export const AppDataSource = new DataSource(
+	process.env.POSTGRES_CONNECTION_URL
+		? {
+				type: 'postgres',
+				url: process.env.POSTGRES_CONNECTION_URL,
+				synchronize: true,
+				logging: false,
+				entities: [User, Auth, Url, Statistic],
+				migrations: [],
+				subscribers: [],
+				ssl: {
+					ca: process.env.CA_CERTIFICATE,
+				},
+			}
+		: {
+				type: 'postgres',
+				host: process.env.POSTGRES_HOST,
+				port: Number(process.env.POSTGRES_PORT || 5432),
+				username: process.env.POSTGRES_USER,
+				password: process.env.POSTGRES_PASSWORD,
+				database: process.env.POSTGRES_DB,
+				synchronize: true,
+				logging: false,
+				entities: [User, Auth, Url, Statistic],
+				migrations: [],
+				subscribers: [],
+				ssl: {
+					ca: process.env.CA_CERTIFICATE,
+				},
+			},
+);
