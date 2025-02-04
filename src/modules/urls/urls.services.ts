@@ -6,20 +6,25 @@ import { StatisticRepository } from '../statistics/statistic.repository';
 import { IPLocation } from '../statistics/statistic.type';
 import axios from 'axios';
 import UAParser from 'ua-parser-js';
+import { UserRepository } from '../users/users.repository';
 
 export class UrlServices {
 	static async getUrl(urlId: string): Promise<Url> {
-		await this.checkUrlExists(urlId);
+		await UrlServices.checkUrlExists(urlId);
 		return await UrlRepository.getUrl(urlId);
 	}
 	static async getUrls(userId: string): Promise<Url[]> {
 		return await UrlRepository.getUrls(userId);
 	}
-	static async addUrl(url: Partial<Url>) {
-		return await UrlRepository.addUrl(url);
+	static async addUrl(url: Partial<Url>, userId: string) {
+		const user = await UserRepository.findOne({ where: { id: userId } });
+		return await UrlRepository.addUrl({
+			...url,
+			user,
+		});
 	}
 	static async deleteUrl(urlId: string) {
-		await this.checkUrlExists(urlId);
+		await UrlServices.checkUrlExists(urlId);
 		return await UrlRepository.deleteUrl(urlId);
 	}
 
@@ -32,21 +37,29 @@ export class UrlServices {
 	}
 
 	static async checkUrlValidOwner(userId: string, urlId: string) {
-		const url = await UrlRepository.createQueryBuilder('url')
-			.leftJoinAndSelect('url.user', 'user')
-			.getOne();
+		const url = await UrlRepository.findOne({
+			where: { id: urlId },
+			relations: ['user'],
+		});
 		if (url.user.id != userId) {
 			throw URL_ERRORS['NO_PERMISSION'];
 		}
 	}
 
 	static async acessUrl(urlId: string, statistic: Partial<Statistic>) {
-		await this.checkUrlExists(urlId);
+		await UrlServices.checkUrlExists(urlId);
 		const url = await UrlRepository.getUrl(urlId, false);
 
 		try {
+			let ipAddress = '';
+			const privateIpMatch = statistic.ipAddress.match(
+				/(^::ffff:127\.)|(^::ffff:10\.)|(^::ffff:172\.1[6-9]\.)|(^::ffff:172\.2[0-9]\.)|(^::ffff:172\.3[0-1]\.)|(^::ffff:192\.168\.)|(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/,
+			);
+			if (!privateIpMatch) {
+				ipAddress = statistic.ipAddress;
+			}
 			const response = await axios.get(
-				`http://ip-api.com/json/${statistic.ipAddress}`,
+				`http://ip-api.com/json/${ipAddress}`,
 			);
 
 			if (response.status == 200) {
@@ -78,7 +91,7 @@ export class UrlServices {
 	}
 
 	static async getUrlSummary(urlId: string) {
-		await this.checkUrlExists(urlId);
+		await UrlServices.checkUrlExists(urlId);
 
 		return await StatisticRepository.getStatisticSummary(urlId);
 	}

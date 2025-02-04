@@ -45,7 +45,7 @@ export const URL_POST_VALIDATION: Schema = {
 		isString: {
 			errorMessage: 'originalUrl must be a valid string',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'originalUrl must not be empty',
 		},
 	},

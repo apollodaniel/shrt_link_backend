@@ -38,7 +38,7 @@ export class UrlController {
 		const url: Partial<Url> = req.body;
 
 		try {
-			await UrlServices.addUrl(url);
+			await UrlServices.addUrl(url, req.userId);
 			resp.sendStatus(200);
 			return;
 		} catch (err: any) {
@@ -64,10 +64,10 @@ export class UrlController {
 			console.log(clientIp);
 			const statistic: Partial<Statistic> = {
 				ipAddress: clientIp,
-				userAgent: Array.isArray(req.headers['User-Agent'])
-					? req.headers['User-Agent'][0]
-					: req.headers['User-Agent'],
+				userAgent: req.headers['user-agent'],
 			};
+
+			console.log(statistic);
 			const url = await UrlServices.acessUrl(urlId, statistic);
 
 			resp.redirect(url.originalUrl);
@@ -87,12 +87,11 @@ export class UrlController {
 		const urlId = req.params.id;
 		try {
 			const summary = await UrlServices.getUrlSummary(urlId);
-			console.log(summary);
 
 			resp.json(summary);
 			return;
 		} catch (err: any) {
-			console.log('Could not get url summary: ' + err.message);
+			console.log(`Could not get url summary ${err}`);
 			if (isErrorEntry(err)) {
 				sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 				return;
@@ -108,16 +107,16 @@ export class UrlController {
 	static async generalUrlSummary(req: Request, resp: Response) {
 		try {
 			const summary = await UrlServices.getGeneralSummary(req.userId);
-			console.log(summary);
 
 			resp.json(summary);
 			return;
 		} catch (err: any) {
-			console.log('Could not get url summary: ' + err);
+			console.debug('Could not get url summary', err);
 			if (isErrorEntry(err)) {
 				sendErrorResponse(resp, err, UrlController.ERROR_KIND);
 				return;
 			}
+			console.log(err.message);
 			sendErrorResponse(
 				resp,
 				URL_ERRORS['UNKNOWN_ERROR'],

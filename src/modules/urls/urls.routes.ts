@@ -43,7 +43,7 @@ router.get(
 );
 
 router.get(
-	'/urls/summary',
+	'/url/summary',
 	ValidationController.validateWithAuth,
 	UrlController.generalUrlSummary,
 );

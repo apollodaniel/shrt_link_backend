@@ -37,7 +37,8 @@ export const UrlRepository = AppDataSource.getRepository(Url).extend({
 		});
 	},
 	async addUrl(this: Repository<Url>, url: Partial<Url>) {
-		await this.save(url);
+		const createdUrl = await this.create(url);
+		await this.save(createdUrl);
 	},
 	async deleteUrl(this: Repository<Url>, urlId: string) {
 		await this.delete(urlId);

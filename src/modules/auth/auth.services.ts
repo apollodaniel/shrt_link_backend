@@ -58,6 +58,7 @@ export class AuthServices {
 				throw COMMON_ERRORS['UNKNOWN_ERROR'];
 			}
 		} catch (err) {
+			console.log(err);
 			if (isErrorEntry(err)) {
 				throw err;
 			}

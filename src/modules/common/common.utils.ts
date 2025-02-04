@@ -14,6 +14,7 @@ export function isErrorEntry(err: any): err is ErrorEntry {
 }
 
 export function sendErrorResponse(resp: Response, err: any, kind: string) {
+	console.log(err);
 	const errorEntry = isErrorEntry(err) ? err : COMMON_ERRORS['UNKNOWN_ERROR'];
 
 	return resp.status(errorEntry.statusCode).json({
