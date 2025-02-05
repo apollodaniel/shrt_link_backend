@@ -37,7 +37,9 @@ export class ValidationController {
 			// verify refresh token
 			if (!JwtHelper.isValidRefreshToken(tokens.refreshToken)) {
 				// logout user in case it's not valid
-				console.log('Invalid refresh token, removing user auth');
+				console.log(
+					`Invalid refresh token ${tokens.refreshToken}, removing user auth`,
+				);
 				await AuthServices.logoutUser(tokens.refreshToken);
 
 				resp.clearCookie(

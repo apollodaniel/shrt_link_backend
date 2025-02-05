@@ -12,7 +12,12 @@ dotenv.config();
 const APP_PORT = process.env.EXPRESS_PORT || 7125;
 
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_ORIGIN, credentials: true }));
+app.use(
+	cors({
+		origin: process.env.FRONTEND_ORIGIN,
+		credentials: true,
+	}),
+);
 app.use(cookieParser(process.env.COOKIE_ENCRIPTION_KEY));
 app.use(express.json());
 app.use(Middlewares.logginMiddleware);
