@@ -18,9 +18,13 @@ export const AppDataSource = new DataSource(
 				entities: [User, Auth, Url, Statistic],
 				migrations: [],
 				subscribers: [],
-				ssl: {
-					ca: process.env.CA_CERTIFICATE,
-				},
+				...(process.env.REQUIRES_SSL == 'true'
+					? {
+							ssl: {
+								ca: process.env.CA_CERTIFICATE,
+							},
+						}
+					: {}),
 			}
 		: {
 				type: 'postgres',
@@ -34,8 +38,12 @@ export const AppDataSource = new DataSource(
 				entities: [User, Auth, Url, Statistic],
 				migrations: [],
 				subscribers: [],
-				ssl: {
-					ca: process.env.CA_CERTIFICATE,
-				},
+				...(process.env.REQUIRES_SSL == 'true'
+					? {
+							ssl: {
+								ca: process.env.CA_CERTIFICATE,
+							},
+						}
+					: {}),
 			},
 );
