@@ -28,9 +28,9 @@ describe('Statistics', () => {
 
 		tokens = await AuthServices.registerUser(userRegister);
 
-		user = await UserRepository.findOne({
+		user = (await UserRepository.findOne({
 			where: { email: userRegister.email },
-		});
+		}))!;
 	});
 
 	afterAll(async () => {

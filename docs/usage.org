@@ -1,0 +1,341 @@
+#+title: Usage
+This project serves as a backend for a link shortener platform. It integrates [[#Auth][Authorization]], [[#User][User Management]], and [[#Url][URL Management]].
+
+It can be used with the [[https://github.com/apollodaniel/shrt_link_frontend][Frontend]] or by calling the API (using an HTTP client like Postman or Curl from the command line).
+
+* Requirements
+:properties:
+:custom_id: Requirements
+:end:
+To reproduce the project on your machine, you need to meet some requirements.
+
+The primary requirements are a few essential tools needed to run the project.
+
+** Git
+Git is a version control system used in this project. You will need it to clone the repository.
+
+You can find the installation guide [[https://github.com/git/git/blob/master/INSTALL][in their repository]] or on their [[https://git-scm.com/][official website]].
+
+** Node.js
+This project uses the Node.js runtime to execute JavaScript.
+
+You can find the installation guide [[https://nodejs.org/en][here]].
+
+** Yarn (recommended)
+Yarn is a package manager for Node.js and serves as an alternative to the default npm.
+
+This project uses Yarn because of its speed and better logging capabilities.
+
+#+begin_quote
+The project scripts in =package.json= use Yarn to execute commands like =build= and =start:dev=.
+#+end_quote
+
+You can find the installation guide [[https://yarnpkg.com/][here]].
+
+* Running the Project
+:properties:
+:custom_id: running
+:end:
+Once the [[#Requirements][requirements]] are met, you can run the project. You can either run it locally or host it (self-hosted or on a hosting platform).
+
+#+begin_quote
+This guide only covers how to run it locally.
+#+end_quote
+
+First, you need to clone the project repository and navigate to the project root:
+#+begin_src bash
+git clone https://github.com/apollodaniel/shrt_link_backend && cd shrt_link_backend
+#+end_src
+
+Once you have the project, install all Node.js dependencies:
+
+#+begin_src bash
+yarn install
+#+end_src
+
+or if you use npm:
+
+#+begin_src bash
+npm install
+#+end_src
+
+After installing the dependencies, you can start the project using:
+
+#+begin_src bash
+yarn start:dev
+#+end_src
+
+or if you use npm:
+
+#+begin_src bash
+npm run start:dev
+#+end_src
+
+The expected output should be:
+#+begin_src bash
+yarn run <yarn-version> # Yarn specific
+$ yarn run ts-node-dev --inspect --respawn src/index.ts
+$ <project-location>/shrt_link_backend/node_modules/.bin/ts-node-dev --inspect --respawn src/index.ts
+[INFO] 12:35:28 ts-node-dev ver. <ts-node-dev-version> (using ts-node ver. <ts-node-version>, TypeScript ver. <typescript-version>)
+Debugger listening on <debugger-websocket-url>
+For help, see: https://nodejs.org/en/docs/inspector
+Initialized AppDataSource
+Listening on port <express-port-defined-on-environment-variables>
+#+end_src
+
+Once running, you can test the backend by pinging the route =/api/v1/ping=.
+
+For example:
+#+begin_src bash
+curl http://localhost:<defined-port>/api/v1/ping
+#+end_src
+
+Expected output:
+#+begin_src bash
+pong!
+#+end_src
+
+At this point, you can proceed to [[#Auth][authenticate a user]] and [[#Url][register a URL]] for testing.
+
+#+begin_quote
+If you're using *Curl* or an HTTP client like *Postman*, ensure you handle JWT tokens correctly. They are saved as HTTP-only cookies, so you must copy cookies from the register/login response and include them in authenticated requests.
+#+end_quote
+
+* Auth
+:properties:
+:custom_id: Auth
+:end:
+Authentication routes handle authorization, authentication, and validation.
+
+More details are available [[file:auth.org][here]].
+
+** Login
+Login is handled at =/auth/login=.
+
+See the requirements in [[file:./routes/auth.org::#login][Login]].
+
+The expected response contains two cookies:
+ - authToken (a JWT for authorization)
+ - refreshToken (a JWT for refreshing the authToken)
+
+More details on cookies are available [[file:cookies.org][here]].
+
+** Register
+Registration is handled at =/auth/register=.
+
+This process registers and logs in the user, resulting in an outcome similar to [[*Login][Login]].
+
+** Logout
+Logout is handled at =/auth/logout=.
+
+See the requirements in [[file:./routes/auth.org::#logout][Logout]].
+
+The expected response contains two expired cookies:
+ - authToken (a JWT for authorization)
+ - refreshToken (a JWT for refreshing the authToken)
+
+More details on cookies are available [[file:cookies.org][here]].
+
+** Validation
+Validation occurs in two steps: field validation and authentication validation.
+
+*** Validating Fields
+Field validation uses express-validator to enforce predefined schemas.
+
+It is implemented as a middleware called =validate= from =ValidationController=. See more details [[file:auth.org][here]].
+
+*** Validating Authentication
+This step verifies request authorization and automatically refreshes expired tokens. More details [[file:auth.org][here]].
+
+* Users
+:properties:
+:custom_id: User
+:end:
+User routes handle user management (retrieving information, deleting accounts, etc.).
+
+All user routes require authentication.
+
+** Retrieving User Info
+User information can be retrieved by ID or based on the currently authenticated user.
+
+*** By ID
+Retrieve user information by ID via =/users/:id=
+
+See the requirements [[file:./routes/users.org::#getbyid][here]].
+
+Expected JSON response:
+#+begin_src json
+{
+    "id": "7c754d32-939c-47e9-96be-a5a4d258c480",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "example@test.com",
+    "creationDate": "2025-02-10T16:43:49.050Z"
+}
+#+end_src
+
+*** Current User
+Retrieve the current user's information via =/users/current=
+
+#+begin_quote
+Authentication is required to access this endpoint.
+#+end_quote
+
+See the requirements [[file:./routes/users.org::#getcurrent][here]].
+
+* Urls
+:properties:
+:custom_id: Url
+:end:
+URL routes manage URL creation, deletion, retrieval, and statistics.
+
+All URL routes require authentication.
+
+** Adding a New URL
+Create a new URL using =/urls/=
+
+See the requirements [[file:routes/urls.org::#addurl][here]].
+
+Expected response: HTTP 200.
+
+** Deleting a URL
+Delete a URL via =/urls/:id=
+
+See the requirements [[file:routes/urls.org::#deleteurl][here]].
+
+Expected response: HTTP 200.
+
+** Retrieving URL Information
+You can retrieve URL information in two ways: by getting a specific URL's details using its ID or by fetching all URLs owned by a user based on authentication.
+
+*** Retrieving a Specific URL
+You can retrieve information about a specific URL at the route =/urls/:id=.
+
+See the requirements [[file:routes/urls.org::#geturl][here]].
+
+The expected output is a JSON response that looks like this:
+#+begin_src json
+{
+    "id": "6BU5322",
+    "originalUrl": "https://example.org",
+    "creationDate": "2025-02-10T17:15:41.064Z"
+}
+#+end_src
+
+*** Retrieving Multiple URLs
+You can retrieve information about multiple URLs at the route =/urls/=.
+
+See the requirements [[file:routes/urls.org::#geturls][here]].
+
+The expected output is a JSON response that looks like this:
+#+begin_src json
+[
+    {
+        "id": "6BU5322",
+        "originalUrl": "https://example.org",
+        "creationDate": "2025-02-10T17:15:41.064Z"
+    },
+    {
+        "id": "F3J15f1",
+        "originalUrl": "https://api.example.org",
+        "creationDate": "2025-02-10T17:16:55.092Z"
+    }
+]
+#+end_src
+
+** Retrieving URL Summary
+You can retrieve a URL summary in two ways: by getting a specific URL's summary using its ID or by fetching a general summary of all URLs based on user authentication.
+
+*** Retrieving a Specific URL Summary
+You can retrieve a specific URL summary at the route =/urls/:id/summary=.
+
+See the requirements [[file:routes/urls.org::#getsummarybyid][here]].
+
+The expected output is a JSON response that looks like this:
+#+begin_src json
+{
+    "countByCountry": [
+        {
+            "country": "Brazil",
+            "count": 4
+        }
+    ],
+    "countByDevice": [
+        {
+            "device": "Linux",
+            "count": 3
+        }
+    ],
+    "countByBrowser": [
+        {
+            "browser": "Chrome",
+            "count": 2
+        }
+    ],
+    "countByDay": [
+        {
+            "day": "2025-02-06T00:00:00.000Z",
+            "count": 4
+        }
+    ],
+    "countByTimeOfDay": [
+        {
+            "hour": "16",
+            "count": 4
+        }
+    ],
+    "totalClicks": 4
+}
+#+end_src
+
+*** Retrieving a General Summary
+You can retrieve a general URL summary at the route =/url/summary=.
+
+See the requirements [[file:routes/urls.org::#getsummary][here]].
+
+The expected output is a JSON response that looks like this:
+#+begin_src json
+{
+    "countByCountry": [
+        {
+            "country": "Brazil",
+            "count": 4
+        }
+    ],
+    "countByDevice": [
+        {
+            "device": "Linux",
+            "count": 3
+        }
+    ],
+    "countByBrowser": [
+        {
+            "browser": "Chrome",
+            "count": 2
+        }
+    ],
+    "countByDay": [
+        {
+            "day": "2025-02-06T00:00:00.000Z",
+            "count": 4
+        }
+    ],
+    "countByTimeOfDay": [
+        {
+            "hour": "16",
+            "count": 4
+        }
+    ],
+    "totalClicks": 4,
+    "countByUrlId": [
+        {
+            "urlId": "6BU5322",
+            "count": 1
+        },
+        {
+            "urlId": "F3J15f1",
+            "count": 3
+        }
+    ]
+}
+#+end_src

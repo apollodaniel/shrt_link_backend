@@ -12,4 +12,4 @@ Some of the technologies used are:
 
 The project is still in development and has room to mature, but for now, it is functioning quite well.
 
-For detailed info check the [[file:docs/index.org][docs]].
+For detailed info check the [[file:docs/index.md][docs]].

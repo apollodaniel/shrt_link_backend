@@ -13,6 +13,12 @@ The project is still in development and has room to mature, but for now, it is f
 
 * Table of contents
 - [[#file-structure][File Structure]]
+- [[file:usage.org][Usage]]
+  - [[file:usage.org::#Requirements][Requirements]]
+  - [[file:usage.org::#running][Running the Project]]
+  - [[file:usage.org::#auth][Auth]]
+  - [[file:usage.org::#User][Users]]
+  - [[file:usage.org::#Url][Urls]]
 - [[file:auth.org::#auth][Authorization]]
   - [[file:auth.org::#validation-middlewares][Validation middlewares]]
 - [[file:routes/index.org][Routes]]
@@ -28,6 +34,9 @@ The project is still in development and has room to mature, but for now, it is f
   - [[file:tests.org::#user-tests][User Tests]]
   - [[file:tests.org::#url-tests][Url Tests]]
   - [[file:tests.org::#validation-tests][Validation Tests]]
-
+- [[file:cookies.org][Cookies]]
 * File Structure
+:properties:
+:custom_id: file-structure
+:end:
 [[file:./filetree.png]]

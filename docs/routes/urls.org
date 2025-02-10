@@ -9,6 +9,9 @@ See more in [[file:../auth.org][Authentication]].
 #+END_QUOTE
 
 ** POST  =/urls/=
+:properties:
+:custom_id: addurl
+:end:
 Add a new URL.
 
 *** Required Fields
@@ -18,6 +21,9 @@ The URL to be shortened.
 Type: string
 
 ** GET  =/urls/:id=
+:properties:
+:custom_id: geturl
+:end:
 Retrieve a URL by its ID.
 
 *** Required Fields
@@ -27,6 +33,9 @@ The ID of the URL being retrieved.
 Type: string
 
 ** DELETE  =/urls/:id=
+:properties:
+:custom_id: deleteurl
+:end:
 Delete a URL by its ID.
 
 *** Required Fields
@@ -36,12 +45,18 @@ The ID of the URL being deleted.
 Type: string
 
 ** GET  =/urls/=
+:properties:
+:custom_id: geturls
+:end:
 Retrieve all URLs associated with a user (=req.userId=).
 
 *** Required Fields
 No fields are required.
 
 ** GET  =/urls/:id/summary=
+:properties:
+:custom_id: getsummary
+:end:
 Retrieve statistics for a URL by its ID, such as total clicks, clicks by country, etc.
 
 *** Required Fields
@@ -49,3 +64,12 @@ Retrieve statistics for a URL by its ID, such as total clicks, clicks by country
 The ID of the URL for which the summary is being retrieved.
 
 Type: string
+
+** GET  =/url/summary=
+:properties:
+:custom_id: getsummary
+:end:
+Retrieve statistics about all urls the current user owns, such as total clicks, clicks by country, etc.
+
+*** Required Fields
+No fields are required.

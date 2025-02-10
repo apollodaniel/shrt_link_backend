@@ -7,6 +7,9 @@ See more in [[file:../auth.org][Authentication]].
 #+END_QUOTE
 
 ** GET  =/users/:id=
+:properties:
+:custom_id: getbyid
+:end:
 Retrieve information about a user by their ID.
 
 *** Required Fields
@@ -16,6 +19,9 @@ The ID of the user being retrieved.
 Type: string
 
 ** GET  =/users/current=
+:properties:
+:custom_id: getcurrent
+:end:
 Retrieve information about the current user using =req.userId=.
 
 *** Required Fields
