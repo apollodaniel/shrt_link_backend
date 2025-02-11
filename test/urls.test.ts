@@ -103,7 +103,7 @@ describe('UrlController', () => {
 			user: user,
 		});
 
-		await UrlServices.addUrl(url);
+		await UrlServices.addUrl(url, user.id);
 
 		const otherCreatedUrl = await UrlRepository.findOne({
 			where: { originalUrl: Not(createdUrl.originalUrl) },
