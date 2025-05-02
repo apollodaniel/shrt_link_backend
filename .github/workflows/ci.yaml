@@ -1,0 +1,20 @@
+name: ci-docker-workflow
+on:
+    push:
+        branches:
+            - main
+jobs:
+    build-image:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            -
+              name: "Publish image"
+              uses: matootie/github-docker@v3.1.0
+              with:
+                accessToken: ${{ secrets.GITHUB_TOKEN }}
+                tag: ${{ github.sha }}
+                containerRegistry: true
+            -
+              name: Print Full Image URL
+              run: echo ${{ steps.publish.outputs.imageURL }}:${{ github.sha }}
