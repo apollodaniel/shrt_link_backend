@@ -16,5 +16,11 @@ jobs:
                 tag: ${{ github.sha }}
                 containerRegistry: true
             -
+              name: "Publish image latest"
+              uses: matootie/github-docker@v3.1.0
+              with:
+                accessToken: ${{ secrets.GITHUB_TOKEN }}
+                containerRegistry: true
+            -
               name: Print Full Image URL
               run: echo ${{ steps.publish.outputs.imageURL }}:${{ github.sha }}
