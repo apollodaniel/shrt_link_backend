@@ -1,0 +1,30 @@
+# example docker compose
+services:
+    db:
+        image: postgres:17-alpine
+        restart: always
+        shm_size: 128mb
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin # modify password before running
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: app
+    backend:
+        image: ghcr.io/apollodaniel/shrt_link_backend:latest
+        build: .
+        depends_on:
+            - db
+        environment:
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin # modify password before running
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: app
+            POSTGRES_HOST: db
+            JWT_AUTHT_EXPIRESIN: 1800
+            JWT_AUTHT_KEY: jauthkey123 # change this value before running
+            JWT_REFRESHT_KEY: jrefreshkey123 # change this value before running
+            COOKIE_ENCRIPTION_KEY: cookiekey123 # change this value before running
+            FRONTEND_ORIGIN: http://localhost:5173
+            EXPRESS_PORT: 8080
+        ports:
+            - 8080:8080

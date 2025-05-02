@@ -17,4 +17,11 @@ RUN yarn install
 
 EXPOSE 8080
 
-CMD [ "node", "index.js" ]
+ENV DOCKERIZE_VERSION v0.9.3
+
+RUN apk update --no-cache \
+	&& apk add --no-cache wget openssl \
+	&& wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
+	&& apk del wget
+
+CMD ["/bin/sh", "-c", "dockerize -wait tcp://$POSTGRES_HOST:$POSTGRES_PORT node index.js"]
