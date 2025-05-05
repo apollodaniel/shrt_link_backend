@@ -12,6 +12,8 @@ services:
             PGDATA: /var/lib/postgresql/data/pgdata
         volumes:
             - postgresql:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
     backend:
         image: ghcr.io/apollodaniel/shrt_link_backend:latest
         build: .
