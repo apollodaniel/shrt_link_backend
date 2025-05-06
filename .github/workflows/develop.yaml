@@ -13,7 +13,12 @@ jobs:
               with:
                 node-version: 22.10
             - name: "Install dockerize"
-              run: apt-get update && apt-get install -y wget && wget -O - https://github.com/jwilder/dockerize/releases/download/v0.9.3/dockerize-linux-amd64-v0.9.3.tar.gz | tar xzf - -C /usr/local/bin && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y wget
+                wget -O - https://github.com/jwilder/dockerize/releases/download/v0.9.3/dockerize-linux-amd64-v0.9.3.tar.gz | sudo tar xzf - -C /usr/local/bin
+                sudo apt-get autoremove -yqq --purge wget
+                sudo rm -rf /var/lib/apt/lists/*
             - name: Pull images
               run: docker compose pull db
             - name: Start PostgreSQL with Docker Compose
