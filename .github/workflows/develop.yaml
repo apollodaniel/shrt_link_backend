@@ -1,0 +1,15 @@
+name: ci-develop-workflow
+on:
+    pull_request:
+        branches:
+            - develop
+jobs:
+    run-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Yarn setup
+              uses: DerYeger/yarn-setup-action@master
+              with:
+                node-version: 22.10
+            - run: yarn test # verify if all tests are ok before allow pr
