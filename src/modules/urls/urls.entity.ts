@@ -28,7 +28,7 @@ export class Url {
 	})
 	statistics: Statistic[];
 
-	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	@Column('timestamptz', { default: () => 'CURRENT_TIMESTAMP'})
 	creationDate: Date;
 
 	@BeforeInsert()

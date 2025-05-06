@@ -3,14 +3,12 @@ import {
 	PrimaryGeneratedColumn,
 	Column,
 	OneToMany,
-	BeforeInsert,
-	JoinColumn,
 	OneToOne,
 } from 'typeorm';
 import { Url } from '../urls/urls.entity';
 import { Auth } from '../auth/auth.entity';
 
-@Entity()
+@Entity("users")
 export class User {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
@@ -29,7 +27,7 @@ export class User {
 	})
 	password: string;
 
-	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	@Column('timestamptz', { default: () => 'CURRENT_TIMESTAMP'})
 	creationDate: Date;
 
 	@OneToMany((type) => Url, (url) => url.user)

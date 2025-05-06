@@ -8,15 +8,15 @@ export class UserServices {
 	) {
 		const userId = typeof user == 'string' ? user : user.id;
 		if (updatedFields.lastName || updatedFields.firstName) {
-			await UserRepository.updateUser(userId, updatedFields);
+			await UserRepository().updateUser(userId, updatedFields);
 		}
 	}
 	static async getUser(user: string | User) {
 		const userId = typeof user == 'string' ? user : user.id;
-		return await UserRepository.getUser(userId);
+		return await UserRepository().getUser(userId);
 	}
 	static async deleteUser(user: string | User) {
 		const userId = typeof user == 'string' ? user : user.id;
-		await UserRepository.deleteUser(userId);
+		await UserRepository().deleteUser(userId);
 	}
 }

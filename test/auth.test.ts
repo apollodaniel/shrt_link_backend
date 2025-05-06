@@ -15,8 +15,8 @@ describe('AuthController', () => {
 	});
 
 	afterEach(async () => {
-		await UserRepository.createQueryBuilder().delete().execute();
-		await AuthRepository.createQueryBuilder().delete().execute();
+		await UserRepository().createQueryBuilder().delete().execute();
+		await AuthRepository().createQueryBuilder().delete().execute();
 	});
 	afterAll(async () => {
 		await AppDataSource.destroy();
