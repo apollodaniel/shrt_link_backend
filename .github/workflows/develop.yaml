@@ -12,4 +12,14 @@ jobs:
               uses: DerYeger/yarn-setup-action@master
               with:
                 node-version: 22.10
-            - run: yarn test # verify if all tests are ok before allow pr
+            - name: "Install dockerize"
+              run: apt-get update \
+                    && apt-get install -y wget \
+                    && wget -O - https://github.com/jwilder/dockerize/releases/download/v0.9.3/dockerize-linux-amd64-v0.9.3.tar.gz | tar xzf - -C /usr/local/bin \
+                    && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
+            - name: Pull images
+              run: docker compose pull db
+            - name: Start PostgreSQL with Docker Compose
+              run: docker compose up db -d
+            - name: "Run tests"
+              run: /usr/local/bin/dockerize -wait tcp://localhost:5432 yarn test # verify if all tests are ok before allow pr
