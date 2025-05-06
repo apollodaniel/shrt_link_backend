@@ -1,20 +1,24 @@
 import { User } from './users.entity';
 import { AppDataSource } from '../../data-source';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { USER_ERRORS } from './users.errors';
 
-export const UserRepository = AppDataSource.getRepository(User).extend({
+export const UserRepository = () => AppDataSource.getRepository(User).extend({
 	async getUser(this: Repository<User>, id: string): Promise<User> {
-		return await this.createQueryBuilder().whereInIds(id).getOne();
+		return await this.findOneBy({
+			id: id
+		});
 	},
 	async getUsers(this: Repository<User>, id: string[]): Promise<User[]> {
-		return await this.createQueryBuilder().whereInIds(id).getMany();
+		return await this.findBy({
+			id: In(id)
+		});
 	},
 	async addUser(this: Repository<User>, user: Partial<User>): Promise<void> {
 		await this.save(user);
 	},
 	async updateUser(this: Repository<User>, id: string, user: Partial<User>) {
-		await this.createQueryBuilder().whereInIds(id).update(user).execute();
+		await this.createQueryBuilder("users").whereInIds(id).update(user).execute();
 	},
 	async deleteUser(this: Repository<User>, id: string) {
 		const exists = await this.exists({

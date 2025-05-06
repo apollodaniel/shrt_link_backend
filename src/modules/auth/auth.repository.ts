@@ -9,12 +9,12 @@ import { User } from '../users/users.entity';
 import { compare, hash } from 'bcrypt';
 import { SALT_ROUNDS } from '../common/common.constants';
 
-export const AuthRepository = AppDataSource.getRepository(Auth).extend({
+export const AuthRepository = ()=>AppDataSource.getRepository(Auth).extend({
 	async loginUser(
 		this: Repository<Auth>,
 		user: AuthCredentials,
 	): Promise<{ refreshToken: string; authToken: string }> {
-		const result = await UserRepository.createQueryBuilder('user')
+		const result = await UserRepository().createQueryBuilder('user')
 			.addSelect('user.password') // This includes the password in the result
 			.where({
 				email: user.email,
@@ -64,7 +64,7 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 		throw AuthErrors['INCORRECT_PASSWORD'];
 	},
 	async registerUser(this: Repository<Auth>, user: Partial<User>) {
-		const emailExists = await UserRepository.exists({
+		const emailExists = await UserRepository().exists({
 			where: {
 				email: user.email,
 			},
@@ -86,7 +86,7 @@ export const AuthRepository = AppDataSource.getRepository(Auth).extend({
 			password: userPassword,
 		};
 
-		await UserRepository.save(parsedUser);
+		await UserRepository().save(parsedUser);
 	},
 	async checkSessionLogged(
 		this: Repository<Auth>,

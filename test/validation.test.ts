@@ -26,16 +26,16 @@ describe('ValidationController', () => {
 
 		tokens = await AuthServices.registerUser(userRegister);
 
-		user = await UserRepository.findOne({
+		user = await UserRepository().findOne({
 			where: { email: userRegister.email },
 		});
 		dotenv.config();
 	});
 
 	afterAll(async () => {
-		await UrlRepository.createQueryBuilder().delete().execute();
-		await AuthRepository.createQueryBuilder().delete().execute();
-		await UserRepository.createQueryBuilder().delete().execute();
+		await UrlRepository().createQueryBuilder().delete().execute();
+		await AuthRepository().createQueryBuilder().delete().execute();
+		await UserRepository().createQueryBuilder().delete().execute();
 		await AppDataSource.destroy();
 	});
 
@@ -99,7 +99,7 @@ describe('ValidationController', () => {
 			refreshToken: 'apollo',
 		};
 
-		await AuthRepository.createQueryBuilder()
+		await AuthRepository().createQueryBuilder()
 			.where({
 				token: tokens.refreshToken,
 			})
@@ -127,7 +127,7 @@ describe('ValidationController', () => {
 		expect(res.status).toHaveBeenCalledWith(401);
 		expect(res.json).toHaveBeenCalled();
 
-		const isSessionExists = await AuthRepository.checkSessionLogged(
+		const isSessionExists = await AuthRepository().checkSessionLogged(
 			user.id,
 		);
 

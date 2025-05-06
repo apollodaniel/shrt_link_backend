@@ -2,7 +2,7 @@ import { AppDataSource } from '../../data-source';
 import { Url } from './urls.entity';
 import { In, Repository } from 'typeorm';
 
-export const UrlRepository = AppDataSource.getRepository(Url).extend({
+export const UrlRepository = ()=>AppDataSource.getRepository(Url).extend({
 	async getUrl(this: Repository<Url>, urlId: string, isJoin?: boolean) {
 		if (typeof isJoin == 'undefined') isJoin = true;
 		return await this.findOne({

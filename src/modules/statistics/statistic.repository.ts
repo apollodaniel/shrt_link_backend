@@ -5,7 +5,7 @@ import { UrlServices } from '../urls/urls.services';
 import { UrlRepository } from '../urls/urls.repository';
 import { UrlGeneralSummary, UrlSummary } from './statistic.type';
 
-export const StatisticRepository = AppDataSource.getRepository(
+export const StatisticRepository = ()=> AppDataSource.getRepository(
 	Statistic,
 ).extend({
 	async createStatistic(
@@ -60,7 +60,7 @@ export const StatisticRepository = AppDataSource.getRepository(
 		this: Repository<Statistic>,
 		urlId: string,
 	): Promise<UrlSummary> {
-		const url = await UrlRepository.getUrl(urlId, false);
+		const url = await UrlRepository().getUrl(urlId, false);
 		const [
 			countByCountry,
 			countByDevice,

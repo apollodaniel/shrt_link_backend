@@ -28,15 +28,15 @@ describe('Statistics', () => {
 
 		tokens = await AuthServices.registerUser(userRegister);
 
-		user = (await UserRepository.findOne({
+		user = (await UserRepository().findOne({
 			where: { email: userRegister.email },
 		}))!;
 	});
 
 	afterAll(async () => {
-		await UrlRepository.createQueryBuilder().delete().execute();
-		await AuthRepository.createQueryBuilder().delete().execute();
-		await UserRepository.createQueryBuilder().delete().execute();
+		await UrlRepository().createQueryBuilder().delete().execute();
+		await AuthRepository().createQueryBuilder().delete().execute();
+		await UserRepository().createQueryBuilder().delete().execute();
 		await AppDataSource.destroy();
 	});
 
@@ -53,7 +53,7 @@ describe('Statistics', () => {
 		];
 
 		for (const urlData of urlsToCreate) {
-			const url = UrlRepository.create({
+			const url = UrlRepository().create({
 				originalUrl: urlData.originalUrl,
 				user: user,
 			});
@@ -64,7 +64,7 @@ describe('Statistics', () => {
 
 			expect(res.sendStatus).toHaveBeenCalledWith(200);
 
-			const createdUrl = await UrlRepository.findOne({
+			const createdUrl = await UrlRepository().findOne({
 				where: { originalUrl: url.originalUrl },
 				relations: ['statistics'],
 			});
@@ -207,13 +207,13 @@ describe('Statistics', () => {
 			},
 		];
 		for (const statData of statisticsData) {
-			const statistic = StatisticRepository.create({
+			const statistic = StatisticRepository().create({
 				...statData,
 				url: createdUrls[
 					Math.floor(Math.random() * createdUrls.length)
 				], // Randomly assign to a URL
 			});
-			await StatisticRepository.save(statistic);
+			await StatisticRepository().save(statistic);
 		}
 	});
 

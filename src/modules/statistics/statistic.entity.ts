@@ -1,5 +1,4 @@
 import {
-	BeforeInsert,
 	Column,
 	Entity,
 	JoinColumn,
@@ -13,11 +12,11 @@ export class Statistic {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
-	@ManyToOne(() => Url, (url) => url.statistics, { onDelete: 'CASCADE' })
+	@ManyToOne(() => Url, (url) => url.statistics, { onDelete: 'CASCADE'})
 	@JoinColumn()
 	url: Url;
 
-	@Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
+	@Column('timestamptz', { default: () => 'CURRENT_TIMESTAMP'})
 	accessTime: Date;
 
 	@Column()

@@ -14,8 +14,8 @@ describe('UserController', () => {
 	});
 
 	afterEach(async () => {
-		await UserRepository.createQueryBuilder().delete().execute();
-		await AuthRepository.createQueryBuilder().delete().execute();
+		await UserRepository().createQueryBuilder().delete().execute();
+		await AuthRepository().createQueryBuilder().delete().execute();
 	});
 	afterAll(async () => {
 		await AppDataSource.destroy();
@@ -38,7 +38,7 @@ describe('UserController', () => {
 		expect(tokens).toHaveProperty('authToken');
 
 		req.userId = (
-			await AuthRepository.findOne({
+			await AuthRepository().findOne({
 				where: { token: tokens.refreshToken },
 				relations: ['user'],
 			})
@@ -50,10 +50,10 @@ describe('UserController', () => {
 		};
 
 		expect(
-			await UserRepository.createQueryBuilder().getMany(),
+			await UserRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 		expect(
-			await AuthRepository.createQueryBuilder().getMany(),
+			await AuthRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 
 		await UserController.deleteUser(req, res);
@@ -63,10 +63,10 @@ describe('UserController', () => {
 		expect(res.sendStatus).toHaveBeenCalled();
 
 		expect(
-			await UserRepository.createQueryBuilder().getMany(),
+			await UserRepository().createQueryBuilder().getMany(),
 		).toHaveLength(0);
 		expect(
-			await AuthRepository.createQueryBuilder().getMany(),
+			await AuthRepository().createQueryBuilder().getMany(),
 		).toHaveLength(0);
 
 		console.log('Logged out and deleted user');
@@ -89,7 +89,7 @@ describe('UserController', () => {
 		expect(tokens).toHaveProperty('authToken');
 
 		req.userId = (
-			await AuthRepository.findOne({
+			await AuthRepository().findOne({
 				where: { token: tokens.refreshToken },
 				relations: ['user'],
 			})
@@ -101,15 +101,15 @@ describe('UserController', () => {
 		};
 
 		expect(
-			await UserRepository.createQueryBuilder().getMany(),
+			await UserRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 		expect(
-			await AuthRepository.createQueryBuilder().getMany(),
+			await AuthRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 
 		await UserController.getCurrentUser(req, res);
 
-		const createdUser = await UserRepository.findOne({
+		const createdUser = await UserRepository().findOne({
 			where: { email: user.email },
 		});
 
@@ -143,7 +143,7 @@ describe('UserController', () => {
 		const req = getMockReq({
 			params: {
 				id: (
-					await AuthRepository.findOne({
+					await AuthRepository().findOne({
 						where: { token: tokens.refreshToken },
 						relations: ['user'],
 					})
@@ -160,15 +160,15 @@ describe('UserController', () => {
 		};
 
 		expect(
-			await UserRepository.createQueryBuilder().getMany(),
+			await UserRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 		expect(
-			await AuthRepository.createQueryBuilder().getMany(),
+			await AuthRepository().createQueryBuilder().getMany(),
 		).toHaveLength(1);
 
 		await UserController.getUser(req, res);
 
-		const createdUser = await UserRepository.findOne({
+		const createdUser = await UserRepository().findOne({
 			where: { email: user.email },
 		});
 

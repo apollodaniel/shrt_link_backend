@@ -11,25 +11,25 @@ import { UserRepository } from '../users/users.repository';
 export class UrlServices {
 	static async getUrl(urlId: string): Promise<Url> {
 		await UrlServices.checkUrlExists(urlId);
-		return await UrlRepository.getUrl(urlId);
+		return await UrlRepository().getUrl(urlId);
 	}
 	static async getUrls(userId: string): Promise<Url[]> {
-		return await UrlRepository.getUrls(userId);
+		return await UrlRepository().getUrls(userId);
 	}
 	static async addUrl(url: Partial<Url>, userId: string) {
-		const user = await UserRepository.findOne({ where: { id: userId } });
-		return await UrlRepository.addUrl({
+		const user = await UserRepository().findOne({ where: { id: userId } });
+		return await UrlRepository().addUrl({
 			...url,
 			user,
 		});
 	}
 	static async deleteUrl(urlId: string) {
 		await UrlServices.checkUrlExists(urlId);
-		return await UrlRepository.deleteUrl(urlId);
+		return await UrlRepository().deleteUrl(urlId);
 	}
 
 	private static async checkUrlExists(urlId: string) {
-		const exists = await UrlRepository.exists({ where: { id: urlId } });
+		const exists = await UrlRepository().exists({ where: { id: urlId } });
 
 		if (!exists) {
 			throw URL_ERRORS['URL_NOT_FOUND'];
@@ -37,7 +37,7 @@ export class UrlServices {
 	}
 
 	static async checkUrlValidOwner(userId: string, urlId: string) {
-		const url = await UrlRepository.findOne({
+		const url = await UrlRepository().findOne({
 			where: { id: urlId },
 			relations: ['user'],
 		});
@@ -48,7 +48,7 @@ export class UrlServices {
 
 	static async acessUrl(urlId: string, statistic: Partial<Statistic>) {
 		await UrlServices.checkUrlExists(urlId);
-		const url = await UrlRepository.getUrl(urlId, false);
+		const url = await UrlRepository().getUrl(urlId, false);
 
 		try {
 			let ipAddress = '';
@@ -68,7 +68,7 @@ export class UrlServices {
 				const device = parsedUa.os.name;
 				const browser = parsedUa.browser.name;
 
-				await StatisticRepository.createStatistic({
+				await StatisticRepository().createStatistic({
 					...statistic,
 					url,
 					country: location.country,
@@ -93,9 +93,9 @@ export class UrlServices {
 	static async getUrlSummary(urlId: string) {
 		await UrlServices.checkUrlExists(urlId);
 
-		return await StatisticRepository.getStatisticSummary(urlId);
+		return await StatisticRepository().getStatisticSummary(urlId);
 	}
 	static async getGeneralSummary(userId: string) {
-		return await StatisticRepository.getGeneralStatisticSummary(userId);
+		return await StatisticRepository().getGeneralStatisticSummary(userId);
 	}
 }

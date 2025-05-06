@@ -29,15 +29,15 @@ describe('UrlController', () => {
 
 		tokens = await AuthServices.registerUser(userRegister);
 
-		user = await UserRepository.findOne({
+		user = await UserRepository().findOne({
 			where: { email: userRegister.email },
 		});
 	});
 
 	afterAll(async () => {
-		await UrlRepository.createQueryBuilder().delete().execute();
-		await AuthRepository.createQueryBuilder().delete().execute();
-		await UserRepository.createQueryBuilder().delete().execute();
+		await UrlRepository().createQueryBuilder().delete().execute();
+		await AuthRepository().createQueryBuilder().delete().execute();
+		await UserRepository().createQueryBuilder().delete().execute();
 		await AppDataSource.destroy();
 	});
 
@@ -49,7 +49,7 @@ describe('UrlController', () => {
 	});
 
 	test('Cria uma url', async () => {
-		const url = UrlRepository.create({
+		const url = UrlRepository().create({
 			originalUrl: 'https://google.com',
 			user: user,
 		});
@@ -61,7 +61,7 @@ describe('UrlController', () => {
 		expect(res.sendStatus).toHaveBeenCalledWith(200);
 		expect(res.send).toHaveBeenCalledTimes(0);
 
-		createdUrl = await UrlRepository.findOne({
+		createdUrl = await UrlRepository().findOne({
 			where: {
 				originalUrl: url.originalUrl,
 			},
@@ -98,14 +98,14 @@ describe('UrlController', () => {
 		req.userId = user.id;
 
 		// cria nova url
-		const url: Partial<Url> = UrlRepository.create({
+		const url: Partial<Url> = UrlRepository().create({
 			originalUrl: 'https://facebook.com',
 			user: user,
 		});
 
 		await UrlServices.addUrl(url, user.id);
 
-		const otherCreatedUrl = await UrlRepository.findOne({
+		const otherCreatedUrl = await UrlRepository().findOne({
 			where: { originalUrl: Not(createdUrl.originalUrl) },
 			relations: ['statistics'],
 		});
@@ -131,7 +131,7 @@ describe('UrlController', () => {
 		expect(res.send).toHaveReturnedTimes(0);
 		expect(res.status).toHaveReturnedTimes(0);
 
-		const urls = await UrlRepository.createQueryBuilder().getMany();
+		const urls = await UrlRepository().createQueryBuilder().getMany();
 		expect(urls).toHaveLength(1);
 		expect(urls[0].id).not.toBe(urlId);
 	});
