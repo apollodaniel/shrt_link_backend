@@ -42,7 +42,7 @@ export async function cleanTestEnvironment() {
 		// Group 2: Users meeting other inactivity criteria
 		qb.where("user.creationDate < NOW() - INTERVAL '15 minutes'")
 		  .orWhere("statistic.accessTime < NOW() - INTERVAL '5 minutes'")
-		  .orWhere("url.creationDate < NOW() - INTERVAL '5 minutes'");
+		  .orWhere("url.creationDate < NOW() - INTERVAL '10 minutes'");
 	  }))
 	  .distinct(true) // Ensure unique IDs
 	  .delete()
