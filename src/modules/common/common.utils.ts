@@ -4,6 +4,7 @@ import { COMMON_ERRORS } from './common.errors';
 import { UserRepository } from '../users/users.repository';
 import { Brackets } from 'typeorm';
 
+
 export function isErrorEntry(err: any): err is ErrorEntry {
 	return (
 		err &&
@@ -26,25 +27,24 @@ export function sendErrorResponse(resp: Response, err: any, kind: string) {
 }
 
 export async function cleanTestEnvironment() {
-	await UserRepository
-	  .createQueryBuilder("user")
-	  .leftJoin("user.urls", "url")
-	  .leftJoin("url.statistics", "statistic")
-	  .select("user.id") // Only select IDs for deletion
-	  .where(new Brackets(qb => {
-		// Group 1: Very inactive users (no URLs or no stats)
-		qb.where("user.creationDate < NOW() - INTERVAL '10 minutes'")
-		  .andWhere(new Brackets(subQb => {
-			subQb.where("url.id IS NULL").orWhere("statistic.id IS NULL");
-		  }));
+	const deletedUsers = await UserRepository()
+	  .createQueryBuilder("users")
+	  .leftJoin('users.urls', "url")
+	  .leftJoin('url.statistics', "statistic")
+	  .where(new Brackets(qb => { qb.where("url.id IS NULL")
+		  .andWhere('users."creationDate" < NOW() - INTERVAL \'10 minutes\'');
 	  }))
 	  .orWhere(new Brackets(qb => {
-		// Group 2: Users meeting other inactivity criteria
-		qb.where("user.creationDate < NOW() - INTERVAL '15 minutes'")
-		  .orWhere("statistic.accessTime < NOW() - INTERVAL '5 minutes'")
-		  .orWhere("url.creationDate < NOW() - INTERVAL '10 minutes'");
+		qb.where("url.id IS NOT NULL")
+		  .andWhere(new Brackets(subQb => {
+			subQb.where('users."creationDate" < NOW() - INTERVAL \'15 minutes\'')
+				 .orWhere('statistic."accessTime" < NOW() - INTERVAL \'5 minutes\'');
+		  }));
 	  }))
-	  .distinct(true) // Ensure unique IDs
-	  .delete()
-	  .execute();
+	  .distinct(true)
+	  .getMany();
+	if(deletedUsers.length>0)
+		await UserRepository().delete(deletedUsers.map(u=>u.id));
+
+	return deletedUsers;
 }
