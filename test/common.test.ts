@@ -347,7 +347,7 @@ describe('Test environment clean endpoint check', () => {
 		expect(isUserExist).toBeFalsy();
 	});
 
-	test('check test environment ip', async()=>{
+	test('check test environment ip and user agent', async()=>{
 		if ( process.env.TEST_ENVIRONMENT ){
 			if (process.env.TEST_IP) {
 				expect(typeof process.env.TEST_IP).toBe("string")
@@ -384,13 +384,16 @@ describe('Test environment clean endpoint check', () => {
 			expect(createdUrl).toBeDefined();
 			expect(createdUrl).not.toBeNull();
 
+			const fallback_useragent="Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/603.1.23 (KHTML, like Gecko) Version/10.0 Mobile/14E5239e Safari/602.1";
+
 			const req = getMockReq({
 				params: {
 					id: createdUrl!.id
 				},
 				headers: {
-				'user-agent': 'Mozilla/5.0 (iPad; CPU OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1'
-			}});
+					'user-agent': process.env.TEST_USER_AGENT || fallback_useragent
+				}
+			});
 			const {res} = getMockRes();
 			await UrlController.acessUrl(req,res);
 
@@ -403,6 +406,11 @@ describe('Test environment clean endpoint check', () => {
 				expect(statistic!.ipAddress).toBe(process.env.TEST_IP)
 			else
 				expect(statistic!.ipAddress).toBe('')
+
+			if (process.env.TEST_USER_AGENT)
+				expect(statistic!.userAgent).toBe(process.env.TEST_USER_AGENT)
+			else
+				expect(statistic!.userAgent).toBe(fallback_useragent)
 
 			console.log(statistic)
 		}
