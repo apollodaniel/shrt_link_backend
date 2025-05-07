@@ -1,11 +1,6 @@
 name: ci-develop-workflow
 on:
     pull_request:
-        types:
-          - opened
-        branches:
-            - develop
-    workflow_dispatch:
         branches:
             - develop
 jobs:
