@@ -23,5 +23,7 @@ jobs:
               run: docker compose pull db
             - name: Start PostgreSQL with Docker Compose
               run: docker compose up db -d
+            - name: Fix entrypoint file permission
+              run: sudo chmod +x entrypoint.sh
             - name: "Run tests"
               run: POSTGRES_HOST="localhost" POSTGRES_PORT=5432 ./entrypoint.sh yarn test # verify if all tests are ok before allow pr
