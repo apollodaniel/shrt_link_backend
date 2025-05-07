@@ -58,6 +58,11 @@ export class UrlServices {
 			if (!privateIpMatch) {
 				ipAddress = statistic.ipAddress;
 			}
+
+			console.log(
+				`acessing url: http://ip-api.com/json/${ipAddress}`,
+			);
+
 			const response = await axios.get(
 				`http://ip-api.com/json/${ipAddress}`,
 			);
