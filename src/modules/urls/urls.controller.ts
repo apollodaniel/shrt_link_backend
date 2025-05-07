@@ -5,7 +5,6 @@ import { Url } from './urls.entity';
 import { URL_ERRORS } from './urls.errors';
 import { Statistic } from '../statistics/statistic.entity';
 import { getClientIp } from 'request-ip';
-import { UrlRepository } from './urls.repository';
 
 export class UrlController {
 	private static ERROR_KIND = 'Url';
@@ -62,8 +61,9 @@ export class UrlController {
 		const clientIp = getClientIp(req);
 		try {
 			console.log(clientIp);
+
 			const statistic: Partial<Statistic> = {
-				ipAddress: clientIp,
+				ipAddress: process.env.TEST_ENVIRONMENT ? undefined : clientIp,
 				userAgent: req.headers['user-agent'],
 			};
 

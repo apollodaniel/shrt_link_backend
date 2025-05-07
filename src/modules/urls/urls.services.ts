@@ -51,13 +51,18 @@ export class UrlServices {
 		const url = await UrlRepository().getUrl(urlId, false);
 
 		try {
-			let ipAddress = '';
+			let ipAddress = process.env.TEST_ENVIRONMENT ? process.env.TEST_IP || '' : '';
 			const privateIpMatch = statistic.ipAddress.match(
 				/(^::ffff:127\.)|(^::ffff:10\.)|(^::ffff:172\.1[6-9]\.)|(^::ffff:172\.2[0-9]\.)|(^::ffff:172\.3[0-1]\.)|(^::ffff:192\.168\.)|(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)|(::[0-9])/,
 			);
 			if (!privateIpMatch) {
 				ipAddress = statistic.ipAddress;
 			}
+
+			console.log(
+				`acessing url: http://ip-api.com/json/${ipAddress}`,
+			);
+
 			const response = await axios.get(
 				`http://ip-api.com/json/${ipAddress}`,
 			);
