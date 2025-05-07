@@ -62,7 +62,7 @@ export class UrlController {
 		try {
 			const statistic: Partial<Statistic> = {
 				ipAddress: process.env.TEST_ENVIRONMENT ? process.env.TEST_IP || "" : clientIp,
-				userAgent: req.headers['user-agent'],
+				userAgent: process.env.TEST_ENVIRONMENT ? process.env.TEST_USER_AGENT || req.headers['user-agent'] : req.headers['user-agent'],
 			};
 
 			const url = await UrlServices.acessUrl(urlId, statistic);
