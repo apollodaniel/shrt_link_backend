@@ -17,16 +17,13 @@ jobs:
               uses: DerYeger/yarn-setup-action@master
               with:
                 node-version: 22.10
-            - name: "Install dockerize"
-              run: |
-                sudo apt-get update
-                sudo apt-get install -y wget
-                wget -O - https://github.com/jwilder/dockerize/releases/download/v0.9.3/dockerize-linux-amd64-v0.9.3.tar.gz | sudo tar xzf - -C /usr/local/bin
-                sudo apt-get autoremove -yqq --purge wget
-                sudo rm -rf /var/lib/apt/lists/*
+            - name: Setup dependencies
+              run: sudo apt update && sudo apt install -y telnet bash gawk grep
             - name: Pull images
               run: docker compose pull db
             - name: Start PostgreSQL with Docker Compose
               run: docker compose up db -d
+            - name: Fix entrypoint file permission
+              run: sudo chmod +x entrypoint.sh
             - name: "Run tests"
-              run: /usr/local/bin/dockerize -wait tcp://localhost:5432 yarn test # verify if all tests are ok before allow pr
+              run: POSTGRES_HOST="localhost" POSTGRES_PORT=5432 ./entrypoint.sh yarn test # verify if all tests are ok before allow pr
