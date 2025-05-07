@@ -60,14 +60,11 @@ export class UrlController {
 		const urlId = req.params.id;
 		const clientIp = getClientIp(req);
 		try {
-			console.log(clientIp);
-
 			const statistic: Partial<Statistic> = {
-				ipAddress: process.env.TEST_ENVIRONMENT ? undefined : clientIp,
+				ipAddress: process.env.TEST_ENVIRONMENT ? process.env.TEST_IP || "" : clientIp,
 				userAgent: req.headers['user-agent'],
 			};
 
-			console.log(statistic);
 			const url = await UrlServices.acessUrl(urlId, statistic);
 
 			resp.redirect(url.originalUrl);
