@@ -17,16 +17,14 @@ RUN yarn install
 
 EXPOSE 8080
 
-ENV DOCKERIZE_VERSION v0.9.3
+RUN apk update && apk add bash busybox-extras
 
-RUN apk update --no-cache \
-	&& apk add --no-cache wget openssl bash \
-	&& wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
-	&& apk del wget
+ENV POSTGRES_HOST=db
+ENV POSTGRES_PORT=5432
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD ["/bin/sh", "-c", "dockerize -wait tcp://$POSTGRES_HOST:$POSTGRES_PORT node index.js"]
+CMD ["node", "index.js"]
