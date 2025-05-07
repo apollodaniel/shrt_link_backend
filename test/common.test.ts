@@ -6,6 +6,8 @@ import { cleanTestEnvironment } from '../src/modules/common/common.utils';
 import { UrlRepository } from '../src/modules/urls/urls.repository';
 import { Statistic } from '../src/modules/statistics/statistic.entity';
 import { StatisticRepository } from '../src/modules/statistics/statistic.repository';
+import {UrlController} from "../src/modules/urls/urls.controller"
+import {getMockReq, getMockRes} from "@jest-mock/express"
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -344,4 +346,65 @@ describe('Test environment clean endpoint check', () => {
 		// verifica se o usuario ainda existe
 		expect(isUserExist).toBeFalsy();
 	});
+
+	test('check test environment ip', async()=>{
+		if ( process.env.TEST_ENVIRONMENT ){
+			if (process.env.TEST_IP) {
+				expect(typeof process.env.TEST_IP).toBe("string")
+			}
+
+			await UserRepository().addUser({
+				...userTemplate,
+				creationDate: new Date(Date.now()),
+			})
+
+			const createdUser = await UserRepository().findOne({
+				where: {
+					email: userTemplate.email
+				}
+			});
+
+			expect(createdUser).toBeDefined();
+			expect(createdUser).not.toBeNull();
+
+			await UrlRepository().addUrl({
+				...urlTemplate,
+				user: createdUser!
+			});
+
+			const createdUrl = await UrlRepository().findOne({
+				where: {
+					user: {
+						id: createdUser!.id
+					}
+				}
+			});
+
+			// verifica se a url foi criada com sucesso
+			expect(createdUrl).toBeDefined();
+			expect(createdUrl).not.toBeNull();
+
+			const req = getMockReq({
+				params: {
+					id: createdUrl!.id
+				},
+				headers: {
+				'user-agent': 'Mozilla/5.0 (iPad; CPU OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1'
+			}});
+			const {res} = getMockRes();
+			await UrlController.acessUrl(req,res);
+
+			expect(res.redirect).toHaveBeenCalledWith(createdUrl!.originalUrl);
+
+			const statistic = await StatisticRepository().createQueryBuilder().getOne();
+
+			expect(statistic).toBeDefined()
+			if (process.env.TEST_IP)
+				expect(statistic!.ipAddress).toBe(process.env.TEST_IP)
+			else
+				expect(statistic!.ipAddress).toBe('')
+
+			console.log(statistic)
+		}
+	})
 });
