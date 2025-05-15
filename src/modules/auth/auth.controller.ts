@@ -13,6 +13,7 @@ export class AuthController {
 		req: Request<unknown>,
 		resp: Response,
 	): Promise<void> {
+		console.log(req.body);
 		const user: Partial<User> = req.body;
 		try {
 			const tokens = await AuthServices.registerUser(user);
@@ -98,6 +99,34 @@ export class AuthController {
 				resp.sendStatus(401);
 				return;
 			}
+
+			resp.sendStatus(200);
+			return;
+		} catch (err: any) {
+			console.log(err);
+			sendErrorResponse(resp, err, AuthController.ERROR_KIND);
+			return;
+		}
+	}
+
+	static async refreshAuth(req: Request, resp: Response): Promise<void> {
+		const refreshToken = req.cookies.refreshToken;
+		try {
+			// verify refresh token
+			if (!refreshToken || !JwtHelper.isValidRefreshToken(refreshToken)) {
+				// logout user in case it's not valid
+				resp.sendStatus(401);
+				return;
+			}
+
+			const authToken = JwtHelper.generateAuthToken(
+				refreshToken,
+			);
+			resp.cookie(
+				COOKIE_CONFIG['authToken'].name,
+				authToken,
+				COOKIE_CONFIG['authToken'].config,
+			);
 
 			resp.sendStatus(200);
 			return;
