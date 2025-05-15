@@ -37,8 +37,8 @@ export class UrlController {
 		const url: Partial<Url> = req.body;
 
 		try {
-			await UrlServices.addUrl(url, req.userId);
-			resp.sendStatus(200);
+			const createdUrl = await UrlServices.addUrl(url, req.userId);
+			resp.status(200).json({id: createdUrl.id});
 			return;
 		} catch (err: any) {
 			sendErrorResponse(resp, err, UrlController.ERROR_KIND);
