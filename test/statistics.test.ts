@@ -62,7 +62,8 @@ describe('Statistics', () => {
 			const { res } = getMockRes();
 			await UrlController.addUrl(req, res);
 
-			expect(res.sendStatus).toHaveBeenCalledWith(200);
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.json).toHaveBeenCalled();
 
 			const createdUrl = await UrlRepository().findOne({
 				where: { originalUrl: url.originalUrl },
