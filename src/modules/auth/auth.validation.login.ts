@@ -8,7 +8,7 @@ export const LOGIN_POST_VALIDATION: Schema = {
 		isEmail: {
 			errorMessage: 'must be a valid email adress',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'email must not be empty',
 		},
 	},
@@ -16,7 +16,7 @@ export const LOGIN_POST_VALIDATION: Schema = {
 		isString: {
 			errorMessage: 'password must be a valid string',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'password must not be empty',
 		},
 		isLength: {

@@ -10,7 +10,7 @@ export const REGISTER_POST_VALIDATION: Schema = {
 		isString: {
 			errorMessage: 'firstName must be a valid string',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'firstName must not be empty',
 		},
 		isLength: {
@@ -25,7 +25,7 @@ export const REGISTER_POST_VALIDATION: Schema = {
 		isString: {
 			errorMessage: 'lastName must be a valid string',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'lastName must not be empty',
 		},
 		isLength: {
@@ -43,7 +43,7 @@ export const REGISTER_POST_VALIDATION: Schema = {
 		isEmail: {
 			errorMessage: 'must be a valid email adress',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'email must not be empty',
 		},
 	},
@@ -51,7 +51,7 @@ export const REGISTER_POST_VALIDATION: Schema = {
 		isString: {
 			errorMessage: 'password must be a valid string',
 		},
-		isEmpty: {
+		notEmpty: {
 			errorMessage: 'password must not be empty',
 		},
 		isLength: {
