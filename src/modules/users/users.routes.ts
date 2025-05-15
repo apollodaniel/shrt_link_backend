@@ -7,15 +7,15 @@ import { UserController } from './users.controller';
 const router = Router();
 
 router.get(
-	'/users/:id',
-	checkSchema(USER_GET_VALIDATION),
-	ValidationController.validateWithAuth,
-	UserController.getUser,
-);
-router.get(
 	'/users/current',
 	ValidationController.validateWithAuth,
 	UserController.getCurrentUser,
+);
+router.get(
+	'/user/:id',
+	checkSchema(USER_GET_VALIDATION),
+	ValidationController.validateWithAuth,
+	UserController.getUser,
 );
 router.delete(
 	'/users/current',

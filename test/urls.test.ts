@@ -58,8 +58,8 @@ describe('UrlController', () => {
 		const { res } = getMockRes();
 		await UrlController.addUrl(req, res);
 
-		expect(res.sendStatus).toHaveBeenCalledWith(200);
-		expect(res.send).toHaveBeenCalledTimes(0);
+		expect(res.status).toHaveBeenCalledWith(200);
+		expect(res.json).toHaveBeenCalled();
 
 		createdUrl = await UrlRepository().findOne({
 			where: {
